@@ -103,6 +103,7 @@ def logout():
 def quote():
     """Get stock quote."""
 
+    # Ff testen
     print("lol")
 
 @app.route("/register", methods=["GET", "POST"])
