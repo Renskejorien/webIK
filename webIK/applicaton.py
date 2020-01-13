@@ -33,34 +33,11 @@ Session(app)
 db = SQL("sqlite:///finance.db")
 
 
-@app.route("/")
-@login_required
+@app.route("/", methods=["GET", "POST"])
 def index():
     """Shows homescreen"""
 
     """TODO"""
-
-@app.route("/add_funds", methods=["GET", "POST"])
-@login_required
-def add_funds():
-    """Add funds to your account"""
-
-    if request.method == "POST":
-
-        # Get requested amount cash should be increased with
-        amount = float(request.form.get("amount"))
-
-        # Increase cash by amount
-        db.execute("UPDATE users SET cash = cash + :amount WHERE id = :user_id",
-                    user_id=session["user_id"],
-                    amount=amount)
-
-        # Return to homepage
-        return redirect("/")
-
-    else:
-        return render_template("add_funds.html")
-
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
