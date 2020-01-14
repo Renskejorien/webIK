@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Question
+{% endblock %}
+
+{% block main %}
+    <form id="identification" action="/register" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="confirmation" placeholder="Password (again)" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+        <p> {{  }} </p>
+    </form>
+
+    <script>
+        function Question():
+        {
+            var URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
+            $.getJSON(URL, function(data) 
+            {
+                // SVGComponentTransferFunctionElement.log(data)
+                
+                // create random integer for place of correct answer
+                var getal = math.floor(math.random() * 4 + 2)
+                if (getal > 5) {
+                    getal == 5
+                };
+
+                let q_a = []
+                q_a[0] = data["results"][0]["question"];
+                q_a[1] = data["results"][0]["correct_answer"];
+                
+                for (var i = 2; i <= 5; i++) 
+                {
+                    if (i < getal) {
+                        q_a[i] = data["results"][0]["incorrect_answers"][i - 2];
+                    }
+                    else if (i > getal) {
+                        q_a[i] = data["results"][0]["incorrect_answers"][i - 3];
+                    }
+                    else {
+                        q_a[i] = data["results"][0]["correct_answer"];
+                    };
+                    
+                };
+               
+            }); 
+        };
+    </script>
+
+{% endblock %}
