@@ -45,7 +45,7 @@ def index():
 @login_required
 def buy():
     """Buy shares of stock"""
-
+    # deze gebruiken we niet
     return redirect("/")
 
 @app.route("/history")
