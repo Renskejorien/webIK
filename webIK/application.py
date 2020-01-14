@@ -35,21 +35,14 @@ db = SQL("sqlite:///spel.db")
 
 
 @app.route("/", methods=["GET", "POST"])
-def index():
+def homescreen():
     """Shows homescreen"""
     if request.method == "POST":
         if request.form.get("newroom"):
-            redirect("/newroom")
+            return redirect("/newroom")
         else:
-            redirect("/existingroom")
+            return redirect("/existingroom")
         username = request.form.get("username")
-
-
-        roomnumber = random.randint(00000, 99999)
-        exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber = roomnumber)
-        while exists:
-            roomnumber = random.randint(00000, 99999)
-
 
     else:
         return render_template("index.html")
@@ -58,7 +51,10 @@ def index():
 @login_required
 def newroom():
     """Makes new room number"""
-
+    roomnumber = random.randint(00000, 99999)
+    exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber = roomnumber)
+    while exists:
+            roomnumber = random.randint(00000, 99999)
     return render_template("bord.html")
 
 @app.route("/existing", methods=["POST"])
