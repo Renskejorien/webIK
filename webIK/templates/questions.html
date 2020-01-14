@@ -20,25 +20,25 @@
     </form>
 
     <script>
-        function Question():
+        function Question()
         {
-            var URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
-            $.getJSON(URL, function(data) 
+            var URL = 'https://opentdb.com/api.php?amount=1&type=multiple';
+            $.getJSON(URL, function(data)
             {
                 // SVGComponentTransferFunctionElement.log(data)
-                
+
                 // create random integer for place of correct answer
-                var getal = math.floor(math.random() * 4 + 2)
+                var getal = math.floor(math.random() * 4 + 2);
                 if (getal > 5) {
                     (getal == 5);
-                };
+                }
 
                 // create an erray with the following order: question[0], correct answer[1], (3x incorrect answer + correct answer (in random order))[2 t/m 5]
-                let q_a = []
+                let q_a = [];
                 q_a[0] = data["results"][0]["question"];
                 q_a[1] = data["results"][0]["correct_answer"];
-                
-                for (var i = 2; i <= 5; i++) 
+
+                for (var i = 2; i <= 5; i++)
                 {
                     if (i < getal) {
                         (q_a[i] = data["results"][0]["incorrect_answers"][i - 2]);
@@ -48,12 +48,12 @@
                     }
                     else {
                         (q_a[i] = data["results"][0]["correct_answer"]);
-                    };
-                    
-                };
+                    }
+
+                }
                 return q_a;
-            }); 
-        };
+            });
+        }
     </script>
 
 {% endblock %}
