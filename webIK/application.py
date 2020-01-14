@@ -40,11 +40,11 @@ def index():
     # toevoegen aan spel
     # hier komt een bord te staan
     if request.method == "POST":
-        if(document.getElementById('button').onclick = "myFunction()")
-            {
-            alert("button was clicked");
-            }
-        request.form.get("username")
+        if request.form.get("newroom"):
+            redirect("/newroom")
+        else:
+            redirect("/existingroom")
+        username = request.form.get("username")
 
     else:
         return render_template("index.html")
