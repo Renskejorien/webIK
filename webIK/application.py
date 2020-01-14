@@ -1,4 +1,5 @@
 import os
+import random
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -34,27 +35,30 @@ db = SQL("sqlite:///spel.db")
 
 
 @app.route("/", methods=["GET", "POST"])
-def index():
+def homescreen():
     """Shows homescreen"""
 
-    return render_template("index.html")
+    if request.method == "POST":
+        if request.form.get("newroom"):
+            return redirect("/newroom")
+        else:
+            return redirect("/existingroom")
+        username = request.form.get("username")
 
-@app.route("/buy", methods=["GET", "POST"])
+    else:
+        return render_template("index.html")
+
+@app.route("/newroom", methods=["POST"])
 @login_required
-def buy():
-    """Buy shares of stock"""
-    # deze gebruiken we niet
-    return redirect("/")
+def newroom():
+    """Makes new room number"""
+    roomnumber = random.randint(00000, 99999)
+    exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber = roomnumber)
+    while exists:
+            roomnumber = random.randint(00000, 99999)
+    return render_template("bord.html")
 
-@app.route("/new")
-@login_required
-def history():
-    """Show history of transactions"""
-
-    return redirect("/")
-
-
-@app.route("/existing", methods=["GET", "POST"])
+@app.route("/existing", methods=["POST"])
 def login():
     """Log user in"""
 
