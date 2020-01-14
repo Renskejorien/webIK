@@ -39,7 +39,15 @@ def index():
     # nieuw spel
     # toevoegen aan spel
     # hier komt een bord te staan
-    return render_template("index.html")
+    if request.method == "POST":
+        if(document.getElementById('button').onclick = "myFunction()")
+            {
+            alert("button was clicked");
+            }
+        request.form.get("username")
+
+    else:
+        return render_template("index.html")
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
