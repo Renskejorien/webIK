@@ -37,14 +37,7 @@ db = SQL("sqlite:///spel.db")
 @app.route("/", methods=["GET", "POST"])
 def homescreen():
     """Shows homescreen"""
-
-    if request.method == "POST":
-        print("hoi", request.form.get("newroom"))
-        if request.form.get("newroom"):
-            return render_template("newroom.html")
-        else:
-            return render_template("existingroom.html")
-    else:
+    if request.method == "GET":
         return render_template("homescreen.html")
 
 @app.route("/newroom", methods=["POST"])
@@ -60,6 +53,7 @@ def newroom():
     return render_template("bord.html")
 
 @app.route("/existing", methods=["POST"])
+@login_required
 def existing():
     """Add player to room"""
     username = request.form.get("username")
@@ -84,19 +78,6 @@ def logout():
 def quote():
     """Get stock quote."""
 
-    return redirect("/")
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    """Register user"""
-
-    return redirect("/")
-
-
-@app.route("/sell", methods=["GET", "POST"])
-@login_required
-def sell():
-    """"""
     return redirect("/")
 
 def errorhandler(e):
