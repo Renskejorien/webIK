@@ -37,6 +37,7 @@ db = SQL("sqlite:///spel.db")
 @app.route("/", methods=["GET", "POST"])
 def homescreen():
     """Shows homescreen"""
+
     if request.method == "POST":
         print("hoi", request.form.get("newroom"))
         if request.form.get("newroom"):
