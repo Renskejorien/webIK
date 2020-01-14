@@ -38,6 +38,7 @@ def index():
     """Shows homescreen"""
     # nieuw spel
     # toevoegen aan spel
+    # hier komt een bord te staan
     return render_template("index.html")
 
 @app.route("/buy", methods=["GET", "POST"])
