@@ -38,17 +38,16 @@ def index():
     """Shows homescreen"""
     # nieuw spel
     # toevoegen aan spel
-    # hier komt een bord te staan
     return render_template("index.html")
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
     """Buy shares of stock"""
-    # deze gebruiken we niet
+
     return redirect("/")
 
-@app.route("/new")
+@app.route("/history")
 @login_required
 def history():
     """Show history of transactions"""
@@ -56,11 +55,11 @@ def history():
     return redirect("/")
 
 
-@app.route("/existing", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
 
-    return render_template("bord.html")
+    return redirect("/")
 
 
 @app.route("/logout")
