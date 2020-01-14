@@ -90,3 +90,11 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
+@app.route("/questions", methods=["GET", "POST"])
+@login_required
+def question(category, difficulty):
+    """Handles a new question"""
+    
+
+    return render_template("questions.html")
