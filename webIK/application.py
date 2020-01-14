@@ -46,7 +46,7 @@ def buy():
 
     return redirect("/")
 
-@app.route("/history")
+@app.route("/new")
 @login_required
 def history():
     """Show history of transactions"""
@@ -54,11 +54,11 @@ def history():
     return redirect("/")
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/existing", methods=["GET", "POST"])
 def login():
     """Log user in"""
 
-    return redirect("/")
+    return render_template("bord.html")
 
 
 @app.route("/logout")
