@@ -36,18 +36,8 @@ db = SQL("sqlite:///spel.db")
 @app.route("/", methods=["GET", "POST"])
 def index():
     """Shows homescreen"""
-    # nieuw spel
-    # toevoegen aan spel
-    # hier komt een bord te staan
-    if request.method == "POST":
-        if(document.getElementById('button').onclick = "myFunction()")
-            {
-            alert("button was clicked");
-            }
-        request.form.get("username")
 
-    else:
-        return render_template("index.html")
+    return render_template("index.html")
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
