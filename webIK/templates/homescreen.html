@@ -6,21 +6,10 @@
 
 {% block main %}
     <form action="/" method="post">
-        <button class="btn btn-primary" type="submit" name="newroom">Create room</button>
-        <button class="btn btn-primary" type="submit" name="existingroom">Add to existing room</button>
-    </form>
-    <form action="/newroom", method="POST">
-        <button class="btn btn-primary" type="button" onclick="myFunction()">Create Room</button>
-        <div class="form-group">
-            <input class="form-control" name="username" placeholder="Username" type="text">
+        <div>
+            <button class="btn btn-primary" type="submit" name="newroom">Create room</button>
         </div>
-    </form>
-    <form action="/existingroom", method="POST">
-        <div class="form-group">
-            <input class="form-control" name="roomname" placeholder="Room name" type="text">
+        <div>
+            <button class="btn btn-primary" type="submit" name="existingroom">Add to existing room</button>
         </div>
-        <div class="form-group">
-            <input class="form-control" name="username" placeholder="Username" type="text">
-        </div>
-    </form>
 {% endblock %}

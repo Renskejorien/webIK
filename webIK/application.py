@@ -38,29 +38,32 @@ db = SQL("sqlite:///spel.db")
 def homescreen():
     """Shows homescreen"""
     if request.method == "POST":
+        print("hoi", request.form.get("newroom"))
         if request.form.get("newroom"):
-            return redirect("/newroom")
+            return render_template("newroom.html")
         else:
-            return redirect("/existingroom")
-        username = request.form.get("username")
-
+            return render_template("existingroom.html")
     else:
-        return render_template("index.html")
+        return render_template("homescreen.html")
 
 @app.route("/newroom", methods=["POST"])
 @login_required
 def newroom():
     """Makes new room number"""
+    username = request.form.get("username")
     roomnumber = random.randint(00000, 99999)
-    exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber = roomnumber)
+    exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
     while exists:
             roomnumber = random.randint(00000, 99999)
+    db.execute("INSERT INTO users (roomnumber, username) VALUES(:roomnumber, :username)", username=username, roomnumber=roomnumber)
     return render_template("bord.html")
 
 @app.route("/existing", methods=["POST"])
-def login():
-    """Log user in"""
-
+def existing():
+    """Add player to room"""
+    username = request.form.get("username")
+    roomnumber = request.form.get("roomnumber")
+    db.execute("INSERT INTO users (roomnumber, username) VALUES(:roomnumber, :username)", username=username, roomnumber=roomnumber)
     return render_template("bord.html")
 
 
