@@ -1,4 +1,5 @@
 import os
+import random
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -34,40 +35,36 @@ db = SQL("sqlite:///spel.db")
 
 
 @app.route("/", methods=["GET", "POST"])
-def index():
+def homescreen():
     """Shows homescreen"""
-    # nieuw spel
-    # toevoegen aan spel
-    # hier komt een bord te staan
+
     if request.method == "POST":
-        if(document.getElementById('button').onclick = "myFunction()")
-            {
-            alert("button was clicked");
-            }
-        request.form.get("username")
-
+        print("hoi", request.form.get("newroom"))
+        if request.form.get("newroom"):
+            return render_template("newroom.html")
+        else:
+            return render_template("existingroom.html")
     else:
-        return render_template("index.html")
+        return render_template("homescreen.html")
 
-@app.route("/buy", methods=["GET", "POST"])
+@app.route("/newroom", methods=["POST"])
 @login_required
-def buy():
-    """Buy shares of stock"""
-    # deze gebruiken we niet
-    return redirect("/")
+def newroom():
+    """Makes new room number"""
+    username = request.form.get("username")
+    roomnumber = random.randint(00000, 99999)
+    exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
+    while exists:
+            roomnumber = random.randint(00000, 99999)
+    db.execute("INSERT INTO users (roomnumber, username) VALUES(:roomnumber, :username)", username=username, roomnumber=roomnumber)
+    return render_template("bord.html")
 
-@app.route("/new")
-@login_required
-def history():
-    """Show history of transactions"""
-
-    return redirect("/")
-
-
-@app.route("/existing", methods=["GET", "POST"])
-def login():
-    """Log user in"""
-
+@app.route("/existing", methods=["POST"])
+def existing():
+    """Add player to room"""
+    username = request.form.get("username")
+    roomnumber = request.form.get("roomnumber")
+    db.execute("INSERT INTO users (roomnumber, username) VALUES(:roomnumber, :username)", username=username, roomnumber=roomnumber)
     return render_template("bord.html")
 
 

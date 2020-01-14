@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+    <form action="/" method="post">
+        <div>
+            <button class="btn btn-primary" type="submit" name="newroom">Create room</button>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit" name="existingroom">Add to existing room</button>
+        </div>
+{% endblock %}
