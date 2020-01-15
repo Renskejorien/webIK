@@ -104,7 +104,7 @@ def question(category, difficulty):
 
     return render_template("questions.html")
 
-@app.route("/board")
+@app.route("/board", methods=["POST"])
 def board(roomnumber, username):
     """Handles a new question"""
 
@@ -124,11 +124,6 @@ def board(roomnumber, username):
     else:
 
         redirect("/")
-
-@app.route("/viewboard")
-def viewboard():
-
-    return render_template("board.html")
 
 def errorhandler(e):
     """Handle error"""
