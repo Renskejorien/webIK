@@ -5,12 +5,6 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/" method="post">
-        <div>
-            <a href="newroom.html"><button class="btn btn-primary" type="submit" name="newroom">Create room</button></a>
-        </div>
-        <div>
-            <a href="existingroom.html"><button class="btn btn-primary" type="submit" name="existingroom">Add to existing room</button></a>
-        </div>
-    </form>
+    <a href="/newroom"><button class="btn btn-primary" name="newroom">Create room</button></a>
+    <a href="/existingroom"><button class="btn btn-primary" name="existingroom">Add to existing room</button></a>
 {% endblock %}
