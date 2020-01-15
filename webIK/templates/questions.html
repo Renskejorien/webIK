@@ -4,11 +4,12 @@
     Question
 {% endblock %}
 
+    <!-- Check this site for understanding -->
+    <!-- https://github.com/CodeExplainedRepo/Multiple-Choice-Quiz-JavaScript -->
+
 {% block main %}
-<!-- Check this site for understanding
-https://github.com/CodeExplainedRepo/Multiple-Choice-Quiz-JavaScript -->
     <div id="container">
-        <div id="quiz" style="display">
+        <div id="quiz" style="display:block">
             <div id="question">{{ data[0] }}</div>
             <div id="choices">
                 <div class="choice" id="A">{{ data[1] }}</div>
@@ -23,7 +24,7 @@ https://github.com/CodeExplainedRepo/Multiple-Choice-Quiz-JavaScript -->
             </div>
             <div id="progress"></div>
         </div>
-        <div id="scoreContainer" style="display"></div>
+        <div id="scoreContainer" style="display:block"></div>
     </div>
 
     <script>
