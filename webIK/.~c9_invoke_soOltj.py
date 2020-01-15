@@ -1,6 +1,5 @@
 import os
 import random
-import urllib
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -67,13 +66,10 @@ def existing():
     return render_template("board.html")
 
 @app.route("/questions", methods=["GET", "POST"])
+@login_required
 def question(category, difficulty):
-    
-
     """Handles a new question"""
-    URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
-    data = urllib.urlopen(URL).read()
-    print(data)
+
 
     return render_template("questions.html")
 
