@@ -104,11 +104,26 @@ def question(category, difficulty):
 
     return render_template("questions.html")
 
-@app.route("/board")
-def board():
+@app.route("/board", methods=["POST"])
+def board(roomnumber, username):
     """Handles a new question"""
 
-    return render_template("board.html")
+    if roomnumber and username:
+
+        boarddata = db.execute("SELECT place, turn FROM rooms WHERE roomnumber = :roomnumber",
+                                    roomnumber=roomnumber)
+
+        playerdata = db.execute("SELECT place, turn FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
+                                    roomnumber=roomnumber,
+                                    username=username)
+
+        return render_template("board.html",
+                                boarddata=boarddata,
+                                playerdata=playerdata)
+
+    else:
+
+        redirect("/")
 
 def errorhandler(e):
     """Handle error"""
