@@ -95,11 +95,9 @@ def login():
 
 @app.route("/questions", methods=["GET", "POST"])
 def question(category, difficulty):
-
-
     """Handles a new question"""
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
-    data = urllib.urlopen(URL).read()
+    data = urllib.request.urlopen(URL).read()
     print(data)
 
     return render_template("questions.html")
@@ -133,6 +131,10 @@ def viewboard():
 @app.route("/winner", methods=["POST"])
 def winner():
     return render_template("winner.html")
+
+@app.route("/loser", methods=["POST"])
+def loser():
+    return render_template("loser.html")
 
 def errorhandler(e):
     """Handle error"""
