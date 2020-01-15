@@ -73,7 +73,7 @@ def existing():
 
 @app.route("/questions", methods=["GET", "POST"])
 def question(category, difficulty):
-    
+
 
     """Handles a new question"""
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
@@ -82,7 +82,7 @@ def question(category, difficulty):
 
     return render_template("questions.html")
 
-@app.route("/board", methods=["POST"])
+@app.route("/board")
 def board(roomnumber, username):
     """Handles a new question"""
 
@@ -102,6 +102,11 @@ def board(roomnumber, username):
     else:
 
         redirect("/")
+
+@app.route("/viewboard")
+def viewboard():
+
+    return render_template("board.html")
 
 def errorhandler(e):
     """Handle error"""
