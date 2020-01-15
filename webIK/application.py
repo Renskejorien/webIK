@@ -45,35 +45,57 @@ def homescreen():
 def newroom():
     """Makes new room number"""
     if request.method == "POST":
-        print("hoi")
         username = request.form.get("username")
-        # Check if username is unique
-        result = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
-        if result:
-            return apology("This username already exists")
         roomnumber = random.randint(00000, 99999)
+        print(username, roomnumber)
         exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
         while exists:
                 roomnumber = random.randint(00000, 99999)
-        db.execute("INSERT INTO users (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)", username=username, roomnumber=roomnumber, place=1, turn=1)
+        db.execute("INSERT INTO rooms (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)", username=username, roomnumber=roomnumber, place=1, turn=1)
         return redirect("/board", roomnumber, username)
     else:
         return render_template("newroom.html")
 
-@app.route("/existing", methods=["POST"])
-@login_required
+@app.route("/existing", methods=["GET", "POST"])
 def existing():
     """Add player to room"""
-    username = request.form.get("username")
-    roomnumber = request.form.get("roomnumber")
-    in_room = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)
-    turn = len(in_room) + 1
-    db.execute("INSERT INTO users (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)", username=username, roomnumber=roomnumber, place=1, turn=turn)
-    return redirect("/board", roomnumber, username)
+    if request.method == "POST":
+        username = request.form.get("username")
+        roomnumber = request.form.get("roomnumber")
+        # Check if username is unique
+        result = db.execute("SELECT * FROM rooms WHERE username = :username", username=username)
+        if result:
+            return apology("This username already exists in this room")
+        in_room = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)
+        turn = len(in_room) + 1
+        db.execute("INSERT INTO rooms (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)", username=username, roomnumber=roomnumber, place=1, turn=turn)
+        return redirect("/board", roomnumber, username)
+    else:
+        return render_template("existingroom.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Add player to room"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        roomnumber = request.form.get("roomnumber")
+        if not username or not roomnumber:
+            return apology("must provide username and password", 403)
+
+        # Query database for username
+        rows = db.execute("SELECT * FROM rooms WHERE username = :username", username=username)
+
+        # Ensure username exists and password is correct
+        if len(rows) != 1:
+            return apology("invalid username and/or roomname", 403)
+        session["user_id"] = rows[0]["user_id"]
+        return redirect("/board", roomnumber, username)
+    else:
+        return render_template("login.html")
 
 @app.route("/questions", methods=["GET", "POST"])
 def question(category, difficulty):
-    
+
 
     """Handles a new question"""
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'

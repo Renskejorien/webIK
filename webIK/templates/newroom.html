@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    New room
+    New Room
 {% endblock %}
 
 {% block main %}
-    <form action="/newroom", method="POST">
+    <form action="/newroom" method="post">
         <div class="form-group">
             <input class="form-control" name="username" placeholder="Username" type="text">
         </div>
-        <button class="btn btn-primary" type="button" type="submit">Get room number</button>
+        <button class="btn btn-primary" type="submit">Get room number</button>
     </form>
 {% endblock %}
