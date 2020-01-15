@@ -1,6 +1,6 @@
 import os
 import random
-import requests
+import urllib
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -94,41 +94,15 @@ def login():
         return render_template("login.html")
 
 @app.route("/questions", methods=["GET", "POST"])
-def question():
+def question(category, difficulty):
+
+
     """Handles a new question"""
-    # get the data from the API
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
-    data = requests.get(URL).json()
+    data = urllib.urlopen(URL).read()
+    print(data)
 
-    # create a list and add the question
-    q_a = []
-    q_a.append(data["results"][0]["question"])
-
-    # generate a random number for the place of the correct answer in the list
-    getal = random.randrange(2, 6)
-    
-    # add the correct answer to session
-    session['correct_answer'] = data["results"][0]["correct_answer"]
-    
-    # put all the wrong answers and the correct answer in the dict
-    for i in range(2, 6):
-        if i < getal:
-            q_a.append(data["results"][0]["incorrect_answers"][i - 2])                  
-        elif i > getal:
-            q_a.append(data["results"][0]["incorrect_answers"][i - 3])                   
-        else:
-            q_a.append(data["results"][0]["correct_answer"])
-
-    # return the template with the list (with the question and four possible answers)
-    return render_template("questions.html", data=q_a)
-
-@app.route("/answer_check", methods=["GET", "POST"])
-def answer_check():
-    # check if the given answer is the correct answer
-    if session['correct_answer'] == request.form.get("your_answer"):
-        return jsonify(True)
-    else:
-        return jsonify(False)
+    return render_template("questions.html")
 
 @app.route("/board")
 def board(roomnumber, username):
@@ -155,6 +129,10 @@ def board(roomnumber, username):
 def viewboard():
 
     return render_template("board.html")
+
+@app.route("/winner", methods=["POST"])
+def winner():
+    return render_template("winner.html")
 
 def errorhandler(e):
     """Handle error"""
