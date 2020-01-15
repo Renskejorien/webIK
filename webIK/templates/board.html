@@ -1,115 +1,139 @@
-<link href="/static/hexes.css" rel="stylesheet">
+<!DOCTYPE html>
 
-<div class="hexrow">
-    <div>
-        <p class="p1">START</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p0"></p class="p0">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">7</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p0"></p class="p0">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">12, RISKY</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-</div>
+<html lang="en">
 
-<div class="hexrow">
-    <div>
-        <p class="p1">2</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">3</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">6</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">8</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">11</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">13</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">16</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-</div>
+    <head>
+        <script
+          src="https://code.jquery.com/jquery-3.4.1.min.js"
+          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+          crossorigin="anonymous"></script>
+        <link href="/static/hexes.css" rel="stylesheet">
+    </head>
 
-<div class="hexrow">
-    <div>
-        <p class="p1">0</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">4</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">5, RISKY</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">9</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">10</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">14</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">15</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">17</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-    <div>
-        <p class="p1">FINISH</p class="p1">
-        <div></div>
-        <div></div>
-    </div>
-</div>
+    <body>
+        <div class="hexrow">
+            <div id="1">
+                <p class="p1">START</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div>
+                <p class="p0"></p class="p0">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="7">
+                <p class="p1">7</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div>
+                <p class="p0"></p class="p0">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="12">
+                <p class="p1">12, RISKY</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="hexrow">
+            <div id="2">
+                <p class="p1">2</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="3">
+                <p class="p1">3</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="6">
+                <p class="p1">6</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="8">
+                <p class="p1">8</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="11">
+                <p class="p1">11</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="13">
+                <p class="p1">13</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="16">
+                <p class="p1">16</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="hexrow">
+            <div>
+                <p class="p1">0</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="4">
+                <p class="p1">4</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="5">
+                <p class="p1">5, RISKY</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="9">
+                <p class="p1">9</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="10">
+                <p class="p1">10</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="14">
+                <p class="p1">14</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="15">
+                <p class="p1">15</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="17">
+                <p class="p1">17</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+            <div id="18">
+                <p class="p1">FINISH</p class="p1">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <button onclick="move()">Click me</button>
+
+        <div id="player1" class="circleBase player1"></div>
+    </body>
+
+    <script>
+        function move(){
+            $("#player1").appendTo("#1");
+        }
+    </script>
+
+</html>

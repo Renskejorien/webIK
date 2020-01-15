@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Index
+    Homepage
 {% endblock %}
 
 {% block main %}
-    <a href="newroom.html"><button class="btn btn-primary" name="newroom">Create room</button></a>
-    <a href="existingroom.html"><button class="btn btn-primary" name="existingroom">Add to existing room</button></a>
+    <a href="/newroom"><button class="btn btn-primary" name="newroom">Create room</button></a>
+    <a href="/existingroom"><button class="btn btn-primary" name="existingroom">Add to existing room</button></a>
+    <a href="/login"><button class="btn btn-primary" name="login">Login existing game</button></a>
 {% endblock %}

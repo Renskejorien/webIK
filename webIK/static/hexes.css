@@ -12,6 +12,18 @@
     top: 50px;
 }
 
+.circleBase {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+}
+
+.player1 {
+    width: 100px;
+    height: 100px;
+    background: yellow;
+    border: 3px black;
+}
+
 .hexrow {
     white-space: nowrap;
     /*right/left margin set at (( width of child div x sin(30) ) / 2) makes a fairly tight fit; a 3px bottom seems to match*/
