@@ -8,6 +8,7 @@
           integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
           crossorigin="anonymous"></script>
         <link href="/static/hexes.css" rel="stylesheet">
+        <link href="/static/players.css" rel="stylesheet">
     </head>
 
     <body>
@@ -125,14 +126,27 @@
             </div>
         </div>
 
-        <button onclick="move()">Click me</button>
+        <button onclick="move()">Move</button>
+        <button onclick="movestart()">Back to start</button>
 
         <div id="player1" class="circleBase player1"></div>
     </body>
 
     <script>
+        var temp = 1;
         function move(){
-            $("#player1").appendTo("#1");
+            temp += Math.ceil(Math.random() * 3);
+            document.getElementById(temp).appendChild(
+            document.getElementById('player1')
+            );
+            player1.style.zIndex = 100;
+        }
+        function movestart(){
+            document.getElementById('1').appendChild(
+            document.getElementById('player1')
+            );
+            player1.style.zIndex = 100;
+            temp = 1
         }
     </script>
 

@@ -1,0 +1,13 @@
+.circleBase {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    position:absolute;
+    z-index: 100;
+}
+
+.player1 {
+    width: 100px;
+    height: 100px;
+    background: yellow;
+    border: 3px black;
+}
