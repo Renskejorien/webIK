@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block main %}
+<!-- Check this site for understanding
+https://github.com/CodeExplainedRepo/Multiple-Choice-Quiz-JavaScript -->
     <div id="container">
-        <div id="start">Start Quiz!</div>
-        <div id="quiz" style="display: none">
-            <div id="question"></div>
-            <div id="qImg"></div>
+        <div id="quiz" style="display">
+            <div id="question">{{ data[0] }}</div>
             <div id="choices">
-                <div class="choice" id="A" onclick="checkAnswer('A')"></div>
-                <div class="choice" id="B" onclick="checkAnswer('B')"></div>
-                <div class="choice" id="C" onclick="checkAnswer('C')"></div>
-                <div class="choice" id="D" onclick="checkAnswer('D')"></div>
+                <div class="choice" id="A">{{ data[1] }}</div>
+                <div class="choice" id="B">{{ data[2] }}</div>
+                <div class="choice" id="C">{{ data[3] }}</div>
+                <div class="choice" id="D">{{ data[4] }}</div>
             </div>
             <div id="timer">
                 <div id="counter"></div>
@@ -23,44 +23,37 @@
             </div>
             <div id="progress"></div>
         </div>
-        <div id="scoreContainer" style="display: none"></div>
+        <div id="scoreContainer" style="display"></div>
     </div>
 
     <script>
-        function Question()
+        $('#choices').onclick(function()
         {
-            var URL = 'https://opentdb.com/api.php?amount=1&type=multiple';
-            $.getJSON(URL, function(data)
-            {
-                // SVGComponentTransferFunctionElement.log(data)
-
-                // create random integer for place of correct answer
-                var getal = math.floor(math.random() * 4 + 2);
-                if (getal > 5) {
-                    (getal == 5);
-                }
-
-                // create an erray with the following order: question[0], correct answer[1], (3x incorrect answer + correct answer (in random order))[2 t/m 5]
-                let q_a = [];
-                q_a[0] = data["results"][0]["question"];
-                q_a[1] = data["results"][0]["correct_answer"];
-
-                for (var i = 2; i <= 5; i++)
-                {
-                    if (i < getal) {
-                        (q_a[i] = data["results"][0]["incorrect_answers"][i - 2]);
-                    }
-                    else if (i > getal) {
-                        (q_a[i] = data["results"][0]["incorrect_answers"][i - 3]);
-                    }
-                    else {
-                        (q_a[i] = data["results"][0]["correct_answer"]);
-                    }
-
-                }
-                return q_a;
+            $('A').observe('click', function () {
+                var your_answer = $("#A").val();
             });
-        }
+            $('B').observe('click', function () {
+                var your_answer = $("#B").val();
+            });
+            $('C').observe('click', function () {
+                var your_answer = $("#C").val();
+            });
+            $('D').observe('click', function () {
+                var your_answer = $("#D").val();
+            });
+
+            $.get('/answer_check', {your_answer: your_answer}, function(response)
+            {
+                if (response == false)
+                {
+                    alert("Wrong answer!");
+                }
+                else
+                {
+                    alert("Well done!");
+                }
+            });
+        });
     </script>
 
 {% endblock %}

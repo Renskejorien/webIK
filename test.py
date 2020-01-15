@@ -22,7 +22,7 @@ for i in range(2, 6):
     else:
         q_a.append(data["results"][0]["correct_answer"])
 
-your_answer = request.form.get("username")
+# your_answer = request.form.get("username")
 
 
 
