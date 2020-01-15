@@ -1,0 +1,137 @@
+import os
+import random
+import urllib
+
+from cs50 import SQL
+from flask import Flask, flash, jsonify, redirect, render_template, request, session
+from flask_session import Session
+from tempfile import mkdtemp
+from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from helpers import login_required, apology
+
+# Configure application
+app = Flask(__name__)
+
+# Ensure templates are auto-reloaded
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# Ensure responses aren't cached
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_FILE_DIR"] = mkdtemp()
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+# Configure CS50 Library to use SQLite database
+db = SQL("sqlite:///spel.db")
+
+
+@app.route("/", methods=["GET", "POST"])
+def homescreen():
+    """Shows homescreen"""
+    if request.method == "GET":
+        return render_template("homescreen.html")
+
+@app.route("/newroom", methods=["GET", "POST"])
+def newroom():
+    """Makes new room number"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        roomnumber = random.randint(00000, 99999)
+        print(username, roomnumber)
+        exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
+        while exists:
+                roomnumber = random.randint(00000, 99999)
+        db.execute("INSERT INTO rooms (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)", username=username, roomnumber=roomnumber, place=1, turn=1)
+        return redirect("/board", roomnumber, username)
+    else:
+        return render_template("newroom.html")
+
+@app.route("/existing", methods=["GET", "POST"])
+def existing():
+    """Add player to room"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        roomnumber = request.form.get("roomnumber")
+        # Check if username is unique
+        result = db.execute("SELECT * FROM rooms WHERE username = :username", username=username)
+        if result:
+            return apology("This username already exists in this room")
+        in_room = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)
+        turn = len(in_room) + 1
+        db.execute("INSERT INTO rooms (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)", username=username, roomnumber=roomnumber, place=1, turn=turn)
+        return redirect("/board", roomnumber, username)
+    else:
+        return render_template("existingroom.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Add player to room"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        roomnumber = request.form.get("roomnumber")
+        if not username or not roomnumber:
+            return apology("must provide username and password", 403)
+
+        # Query database for username
+        rows = db.execute("SELECT * FROM rooms WHERE username = :username", username=username)
+
+        # Ensure username exists and password is correct
+        if len(rows) != 1:
+            return apology("invalid username and/or roomname", 403)
+        session["user_id"] = rows[0]["user_id"]
+        return redirect("/board", roomnumber, username)
+    else:
+        return render_template("login.html")
+
+@app.route("/questions", methods=["GET", "POST"])
+def question(category, difficulty):
+
+
+    """Handles a new question"""
+    URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
+    data = urllib.urlopen(URL).read()
+    print(data)
+
+    return render_template("questions.html")
+
+@app.route("/board", methods=["POST"])
+def board(roomnumber, username):
+    """Handles a new question"""
+
+    if roomnumber and username:
+
+        boarddata = db.execute("SELECT place, turn FROM rooms WHERE roomnumber = :roomnumber",
+                                    roomnumber=roomnumber)
+
+        playerdata = db.execute("SELECT place, turn FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
+                                    roomnumber=roomnumber,
+                                    username=username)
+
+        return render_template("board.html",
+                                boarddata=boarddata,
+                                playerdata=playerdata)
+
+    else:
+
+        redirect("/")
+
+def errorhandler(e):
+    """Handle error"""
+    if not isinstance(e, HTTPException):
+        e = InternalServerError()
+    return print(e.name, e.code)
+
+
+# Listen for errors
+for code in default_exceptions:
+    app.errorhandler(code)(errorhandler)
