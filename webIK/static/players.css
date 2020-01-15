@@ -8,6 +8,27 @@
 .player1 {
     width: 100px;
     height: 100px;
+    background: blue;
+    border: 3px black;
+}
+
+.player2 {
+    width: 100px;
+    height: 100px;
+    background: red;
+    border: 3px black;
+}
+
+.player3 {
+    width: 100px;
+    height: 100px;
     background: yellow;
+    border: 3px black;
+}
+
+.player4 {
+    width: 100px;
+    height: 100px;
+    background: green;
     border: 3px black;
 }

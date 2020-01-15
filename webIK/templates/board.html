@@ -126,27 +126,73 @@
             </div>
         </div>
 
-        <button onclick="move()">Move</button>
+        <button onclick="move1()">Move1</button>
+        <button onclick="move2()">Move2</button>
+        <button onclick="move3()">Move3</button>
+        <button onclick="move4()">Move4</button>
+        <br></br>
         <button onclick="movestart()">Back to start</button>
 
         <div id="player1" class="circleBase player1"></div>
+        <div id="player2" class="circleBase player2"></div>
+        <div id="player3" class="circleBase player3"></div>
+        <div id="player4" class="circleBase player4"></div>
     </body>
 
     <script>
-        var temp = 1;
-        function move(){
-            temp += Math.ceil(Math.random() * 3);
-            document.getElementById(temp).appendChild(
+        var place1 = 1;
+        var place2 = 1;
+        var place3 = 1;
+        var place4 = 1;
+        function move1(){
+            place1 += Math.ceil(Math.random() * 3);
+            document.getElementById(place1).appendChild(
             document.getElementById('player1')
             );
             player1.style.zIndex = 100;
+        }
+        function move2(){
+            place2 += Math.ceil(Math.random() * 3);
+            document.getElementById(place2).appendChild(
+            document.getElementById('player2')
+            );
+            player2.style.zIndex = 100;
+        }
+        function move3(){
+            place3 += Math.ceil(Math.random() * 3);
+            document.getElementById(place3).appendChild(
+            document.getElementById('player3')
+            );
+            player3.style.zIndex = 100;
+        }
+        function move4(){
+            place4 += Math.ceil(Math.random() * 3);
+            document.getElementById(place4).appendChild(
+            document.getElementById('player4')
+            );
+            player4.style.zIndex = 100;
         }
         function movestart(){
             document.getElementById('1').appendChild(
             document.getElementById('player1')
             );
+            document.getElementById('1').appendChild(
+            document.getElementById('player2')
+            );
+            document.getElementById('1').appendChild(
+            document.getElementById('player3')
+            );
+            document.getElementById('1').appendChild(
+            document.getElementById('player4')
+            );
             player1.style.zIndex = 100;
-            temp = 1
+            player2.style.zIndex = 100;
+            player3.style.zIndex = 100;
+            player4.style.zIndex = 100;
+            place1 = 1;
+            place2 = 1;
+            place3 = 1;
+            place4 = 1;
         }
     </script>
 
