@@ -1,6 +1,7 @@
 import os
 import random
-import urllib
+import urllib.request
+import requests
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -46,12 +47,12 @@ def newroom():
     """Makes new room number"""
     if request.method == "POST":
         username = request.form.get("username")
+        category = request.form.get("category")
         roomnumber = random.randint(00000, 99999)
-        print(username, roomnumber)
         exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
         while exists:
                 roomnumber = random.randint(00000, 99999)
-        db.execute("INSERT INTO rooms (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)", username=username, roomnumber=roomnumber, place=1, turn=1)
+        db.execute("INSERT INTO rooms (roomnumber, username, category, place, turn) VALUES(:roomnumber, :username, :category, :place, :turn)", username=username, roomnumber=roomnumber, category=category, place=1, turn=1)
         return redirect("/board", roomnumber, username)
     else:
         return render_template("newroom.html")
@@ -94,13 +95,26 @@ def login():
         return render_template("login.html")
 
 @app.route("/questions", methods=["GET", "POST"])
-def question(category, difficulty):
+def question():
     """Handles a new question"""
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
-    data = urllib.request.urlopen(URL).read()
-    print(data)
+    data = requests.get(URL).json()
+    getal = random.randrange(2, 6)
+    q_a = []
+    q_a.append(data["results"][0]["question"])
+    # q_a.append(data["results"][0]["correct_answer"])
 
-    return render_template("questions.html")
+    for i in range(2, 6):
+        if i < getal:
+            q_a.append(data["results"][0]["incorrect_answers"][i - 2])
+
+        elif i > getal:
+            q_a.append(data["results"][0]["incorrect_answers"][i - 3])
+
+        else:
+            q_a.append(data["results"][0]["correct_answer"])
+    return data
+    # return render_template("questions.html")
 
 @app.route("/board")
 def board(roomnumber, username):
