@@ -14,7 +14,19 @@
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
+            </select>
         </div>
+        <pre></pre>
         <button class="btn btn-primary" type="submit">Get room number</button>
     </form>
+    <script>
+    // https://html-online.com/articles/simple-popup-box/
+        $(window).load(function () {
+            $(".trigger_popup_fricc").click(function(){
+               $('.hover_bkgr_fricc').show();
+            });
+            $('.hover_bkgr_fricc').click(function(){
+                $('.hover_bkgr_fricc').hide();
+            });
+    </script>
 {% endblock %}
