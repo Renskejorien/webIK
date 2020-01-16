@@ -1,7 +1,14 @@
+.pin {
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    position: absolute;
+}
+
 .circleBase {
     border-radius: 50%;
     behavior: url(PIE.htc); /* remove if you don't care about IE8 */
-    position:absolute;
+    position: absolute;
     z-index: 100;
 }
 
@@ -10,6 +17,8 @@
     height: 100px;
     background: blue;
     border: 3px black;
+    top: 200px;
+    left: 200px;
 }
 
 .player2 {

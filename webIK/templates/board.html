@@ -47,7 +47,7 @@
                 <div></div>
             </div>
             <div id="3">
-                <p class="p1">3</p class="p1">
+                <p class="p1" id="3p">3</p class="p1">
                 <div></div>
                 <div></div>
             </div>
@@ -126,6 +126,8 @@
             </div>
         </div>
 
+        <div id="pin1" class="pin"></div>
+
         <button onclick="move1()">Move1</button>
         <button onclick="move2()">Move2</button>
         <button onclick="move3()">Move3</button>
@@ -146,49 +148,65 @@
         var place4 = 1;
         function move1(){
             place1 += Math.ceil(Math.random() * 3);
-            document.getElementById(place1).appendChild(
-            document.getElementById('player1')
-            );
-            player1.style.zIndex = 100;
+            var pin = document.getElementById(place1);
+            var coor = pin.getBoundingClientRect();
+            var d = document.getElementById('player1');
+            d.style.left = coor.left + "px";
+            d.style.top = coor.top + "px";
+            d.style.zIndex = 100;
         }
         function move2(){
             place2 += Math.ceil(Math.random() * 3);
-            document.getElementById(place2).appendChild(
-            document.getElementById('player2')
-            );
-            player2.style.zIndex = 100;
+            var pin = document.getElementById(place2);
+            var coor = pin.getBoundingClientRect();
+            var d = document.getElementById('player2');
+            d.style.left = coor.left + "px";
+            d.style.top = coor.top + "px";
+            d.style.zIndex = 100;
         }
         function move3(){
             place3 += Math.ceil(Math.random() * 3);
-            document.getElementById(place3).appendChild(
-            document.getElementById('player3')
-            );
-            player3.style.zIndex = 100;
+            var pin = document.getElementById(place3);
+            var coor = pin.getBoundingClientRect();
+            var d = document.getElementById('player3');
+            d.style.left = coor.left + "px";
+            d.style.top = coor.top + "px";
+            d.style.zIndex = 100;
         }
         function move4(){
             place4 += Math.ceil(Math.random() * 3);
-            document.getElementById(place4).appendChild(
-            document.getElementById('player4')
-            );
-            player4.style.zIndex = 100;
+            var pin = document.getElementById(place4);
+            var coor = pin.getBoundingClientRect();
+            var d = document.getElementById('player4');
+            d.style.left = coor.left + "px";
+            d.style.top = coor.top + "px";
+            d.style.zIndex = 100;
         }
         function movestart(){
-            document.getElementById('1').appendChild(
-            document.getElementById('player1')
-            );
-            document.getElementById('1').appendChild(
-            document.getElementById('player2')
-            );
-            document.getElementById('1').appendChild(
-            document.getElementById('player3')
-            );
-            document.getElementById('1').appendChild(
-            document.getElementById('player4')
-            );
-            player1.style.zIndex = 100;
-            player2.style.zIndex = 100;
-            player3.style.zIndex = 100;
-            player4.style.zIndex = 100;
+            place0 = 1;
+            var pin = document.getElementById(place0);
+            var coor = pin.getBoundingClientRect();
+
+            var d = document.getElementById('player1');
+            d.style.left = coor.left + "px";
+            d.style.top = coor.top + "px";
+            d.style.zIndex = 100;
+
+            var d = document.getElementById('player2');
+            d.style.left = coor.left + "px";
+            d.style.top = coor.top + "px";
+            d.style.zIndex = 100;
+
+            var d = document.getElementById('player3');
+            d.style.left = coor.left + "px";
+            d.style.top = coor.top + "px";
+            d.style.zIndex = 100;
+
+            var d = document.getElementById('player4');
+            d.style.left = coor.left + "px";
+            d.style.top = coor.top + "px";
+            d.style.zIndex = 100;
+
             place1 = 1;
             place2 = 1;
             place3 = 1;
