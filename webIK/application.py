@@ -122,15 +122,33 @@ def question():
     # return render_template("questions.html")
 
 @app.route("/board")
-def board(roomnumber, username):
+def board():
     """Handles a new question"""
+
+    #
+    #
+    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
+    #
+    # waarchijnlijk met request.form.get("username")
+
+    roomnumber = request.args.get('username', '')
+
+    username = request.args.get('wa8w', '')
+
+    #
+    #
+    #
+    #
+    #
 
     if roomnumber and username:
 
-        boarddata = db.execute("SELECT place, turn FROM rooms WHERE roomnumber = :roomnumber",
+        boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
                                     roomnumber=roomnumber)
 
-        playerdata = db.execute("SELECT place, turn FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
+        # Vergeet bij deze twee niet turn_fixed toe te voegen!
+
+        playerdata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
                                     roomnumber=roomnumber,
                                     username=username)
 
@@ -141,6 +159,49 @@ def board(roomnumber, username):
     else:
 
         redirect("/")
+
+@app.route("/turn")
+def compute_turn():
+
+    #
+    #
+    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
+    #
+    # waarschijnlijk via js
+
+    current_player = request.args.get('username', '')
+
+    place = request.args.get('place', '')
+
+    roomnumber = request.args.get('DitIsNietDeManier', '')
+
+    # behalve roomnumber, fijn als die eigenlijk altijd aanwezig is, zoals een session id
+    #
+    #
+    #
+    #
+
+    boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
+                                    roomnumber=roomnumber)
+
+    for otherplayer in boarddata:
+
+        if otherplayer["username"] != current_player:
+
+            db.execute("UPDATE rooms SET turn = turn - 1 WHERE username = :username",
+                        username=otherplayer["username"])
+
+        else:
+
+            db.execute("UPDATE rooms SET turn = 4 WHERE username = :username",
+                        username=current_player)
+
+            db.execute("UPDATE rooms SET place = :place WHERE username = :username",
+                        username=current_player,
+                        place=place)
+
+    redirect
+
 
 @app.route("/viewboard")
 def viewboard():
