@@ -160,25 +160,67 @@ def board():
 
         redirect("/")
 
-@app.route("/turn")
-def compute_turn():
+@app.route("/roll_dice")
+def roll_dice():
 
     #
     #
     # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
     #
-    # waarschijnlijk via js
+    #
 
     current_player = request.args.get('username', '')
 
-    place = request.args.get('place', '')
+    roomnumber = request.args.get('DitIsNietDeManier', '')
+
+    # Behalve roomnumber, fijn als die eigenlijk altijd aanwezig is, zoals een session id
+    # Hoe?
+    #
+    #
+    #
+
+    dobbelsteen = random.randrange(1,4,1)
+
+    current_place = db.execute("SELECT place FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
+                                    roomnumber=roomnumber,
+                                    username=current_player)
+
+    new_place = current_place + dobbelsteen
+
+    # TODO:
+    # Pak uit een database welk vakje de speler dan op staat, en dus welke vraag die moet krijgen
+    # Moeten we deze meegeven aan question?
+
+    return redirect("/question",
+                    new_place=new_place)
+
+@app.route("/compute_turn")
+def compute_turn():
+
+    # TODO:
+    # Kom dan hier terug, en doe het volgende:
+    #
+
+    #
+    #
+    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
+    #
+    #
+
+    current_player = request.args.get('username', '')
 
     roomnumber = request.args.get('DitIsNietDeManier', '')
 
-    # behalve roomnumber, fijn als die eigenlijk altijd aanwezig is, zoals een session id
+    new_place = request.args.get('DitIsNietDeManier', '')
+
+    # Behalve roomnumber, fijn als die eigenlijk altijd aanwezig is, zoals een session id
+    # Hoe?
     #
     #
     #
+
+    # TODO:
+    # If question correct: new_place += 1
     #
 
     boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
@@ -198,9 +240,9 @@ def compute_turn():
 
             db.execute("UPDATE rooms SET place = :place WHERE username = :username",
                         username=current_player,
-                        place=place)
+                        place=new_place)
 
-    redirect
+    return redirect("/board")
 
 
 @app.route("/viewboard")
