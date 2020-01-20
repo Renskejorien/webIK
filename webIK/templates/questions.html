@@ -10,7 +10,7 @@
 {% block main %}
     <div id="container">
         <div id="quiz" style="display:contents">
-            <div id="question">{{ data[0] }}</div>
+            <subtitle id="question">{{ data[0] }}</subtitle>
             <div id="choices">
                 <button class="choice" id="A">{{ data[1] }}</button>
                 <button class="choice" id="B">{{ data[2] }}</button>
@@ -30,21 +30,7 @@
     <script>
         $('button').click(function()
         {
-            // $('A').observe('click', function () {
-            //     var your_answer = $("#A").val();
-            // });
-            // $('B').observe('click', function () {
-            //     var your_answer = $("#B").val();
-            // });
-            // $('C').observe('click', function () {
-            //     var your_answer = $("#C").val();
-            // });
-            // $('D').observe('click', function () {
-            //     var your_answer = $("#D").val();
-            // });
             var your_answer = this.id
-            
-
             $.get('/answer_check', {your_answer: your_answer}, function(response)
             {
                 if (response == false)
