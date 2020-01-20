@@ -126,40 +126,15 @@ def question():
 def board():
     """Handles a new question"""
 
-    #
-    #
-    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
-    #
-    # waarchijnlijk met request.form.get("username")
+    playerdata = db.execute("SELECT roomnumber, username, place, turn, turn_fixed FROM rooms WHERE user_id = :user_id",
+                                user_id=session["user_id"])
 
-    roomnumber = request.args.get('username', '')
+    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
+                                roomnumber=playerdata[0]["roomnumber"])
 
-    username = request.args.get('wa8w', '')
-
-    #
-    #
-    #
-    #
-    #
-
-    if roomnumber and username:
-
-        boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                    roomnumber=roomnumber)
-
-        # Vergeet bij deze twee niet turn_fixed toe te voegen!
-
-        playerdata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
-                                    roomnumber=roomnumber,
-                                    username=username)
-
-        return render_template("board.html",
-                                boarddata=boarddata,
-                                playerdata=playerdata)
-
-    else:
-
-        redirect("/")
+    return render_template("board.html",
+                            boarddata=boarddata,
+                            playerdata=playerdata)
 
 @app.route("/roll_dice")
 def roll_dice():
