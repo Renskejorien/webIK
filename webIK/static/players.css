@@ -17,6 +17,9 @@
     height: 100px;
     background: blue;
     border: 3px black;
+    opacity: 0;
+    left: 10px;
+    top: 10px;
 }
 
 .player2 {
@@ -24,6 +27,9 @@
     height: 100px;
     background: red;
     border: 3px black;
+    opacity: 0;
+    left: 10px;
+    top: 10px;
 }
 
 .player3 {
@@ -31,6 +37,9 @@
     height: 100px;
     background: yellow;
     border: 3px black;
+    opacity: 0;
+    left: 10px;
+    top: 10px;
 }
 
 .player4 {
@@ -38,4 +47,7 @@
     height: 100px;
     background: green;
     border: 3px black;
+    opacity: 0;
+    left: 10px;
+    top: 10px;
 }
