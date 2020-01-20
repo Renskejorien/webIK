@@ -142,7 +142,8 @@ def question():
 def answer_check():
     """Checks if question is answered correctly"""
     # return jsonify(session["correct_answer"] != request.form.get('your_answer'))
-    if session["correct_answer"] == request.form.get('your_answer'):
+    # return jsonify(True)
+    if session["correct_answer"] == request.args.get('your_answer'):
         return jsonify(True)
     else:
         return jsonify(False)
