@@ -105,15 +105,17 @@ def login():
         return render_template("login.html")
 
 @app.route("/questions", methods=["GET", "POST"])
-@login_required
+# @login_required
 def question():
     """Handles a new question"""
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
     data = requests.get(URL).json()
+    
     getal = random.randrange(2, 6)
+    
     q_a = []
     q_a.append(data["results"][0]["question"])
-    # q_a.append(data["results"][0]["correct_answer"])
+    session["correct_answer"] = data["results"][0]["correct_answer"]
 
     for i in range(2, 6):
         if i < getal:
@@ -124,8 +126,16 @@ def question():
 
         else:
             q_a.append(data["results"][0]["correct_answer"])
-    return data
-    # return render_template("questions.html")
+
+    return render_template("questions.html", data=q_a)
+
+@app.route("/answer_check", methods=["GET"])
+def answer_check():
+    """Checks if question is answered correctly"""
+    if session["correct_answer"] == request.args.get('your_answer'):
+        return jsonify(True)
+    else:
+        return jsonify(False)
 
 @app.route("/board")
 @login_required
