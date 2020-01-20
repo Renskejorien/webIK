@@ -115,7 +115,7 @@ def question():
     
     q_a = []
     q_a.append(data["results"][0]["question"])
-    session["correct_answer"] = data["results"][0]["correct_answer"]
+    correct_answer = data["results"][0]["correct_answer"]
 
     for i in range(2, 6):
         if i < getal:
@@ -127,12 +127,20 @@ def question():
         else:
             q_a.append(data["results"][0]["correct_answer"])
 
+    answer_converter = {1:A, 2:B, 3:C, 4:D}
+    
+    for j in range(1, 5):
+        if q_a[j] == correct_answer:
+            abcd = answer_converter[j]
+
+    session["correct_answer"] = abcd
+
     return render_template("questions.html", data=q_a)
 
 @app.route("/answer_check", methods=["GET"])
 def answer_check():
     """Checks if question is answered correctly"""
-    if session["correct_answer"] == request.args.get('your_answer'):
+    if session["correct_answer"] == request.form.get('your_answer'):
         return jsonify(True)
     else:
         return jsonify(False)
