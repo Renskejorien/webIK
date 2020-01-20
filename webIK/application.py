@@ -200,6 +200,12 @@ def winner():
 def loser():
     return render_template("loser.html")
 
+@app.route("/logout")
+def logout():
+    """log user out"""
+    session.clear()
+    return redirect("/")
+
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
