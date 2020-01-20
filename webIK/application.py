@@ -129,8 +129,10 @@ def board():
     playerdata = db.execute("SELECT roomnumber, username, place, turn, turn_fixed FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
-    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
+    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
+
+    print(boarddata)
 
     return render_template("board.html",
                             boarddata=boarddata,
@@ -139,68 +141,31 @@ def board():
 @app.route("/roll_dice")
 def roll_dice():
 
-    #
-    #
-    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
-    #
-    #
-
-    current_player = request.args.get('username', '')
-
-    roomnumber = request.args.get('DitIsNietDeManier', '')
-
-    # Behalve roomnumber, fijn als die eigenlijk altijd aanwezig is, zoals een session id
-    # Hoe?
-    #
-    #
-    #
+    playerdata = request.args.get('playerdata', '')
 
     dobbelsteen = random.randrange(1,4,1)
 
-    current_place = db.execute("SELECT place FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
-                                    roomnumber=roomnumber,
-                                    username=current_player)
-
-    new_place = current_place + dobbelsteen
+    db.execute("UPDATE rooms SET place = place + :dobbelsteen WHERE roomnumber = :roomnumber AND username = :username",
+                roomnumber=playerdata[0]["roomnumber"],
+                username=playerdata[0]["username"],
+                dobbelsteen=dobbelsteen)
 
     # TODO:
-    # Pak uit een database welk vakje de speler dan op staat, en dus welke vraag die moet krijgen
-    # Moeten we deze meegeven aan question?
+    # Plaats hier code om een vraag te beantwoorden of redirect daar naar toe
+    #
 
-    return redirect("/question",
-                    new_place=new_place)
+    return redirect("/compute_turn")
 
 @app.route("/compute_turn")
 def compute_turn():
 
-    # TODO:
-    # Kom dan hier terug, en doe het volgende:
-    #
-
-    #
-    #
-    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
-    #
-    #
-
-    current_player = request.args.get('username', '')
-
-    roomnumber = request.args.get('DitIsNietDeManier', '')
-
-    new_place = request.args.get('DitIsNietDeManier', '')
-
-    # Behalve roomnumber, fijn als die eigenlijk altijd aanwezig is, zoals een session id
-    # Hoe?
-    #
-    #
-    #
-
-    # TODO:
-    # If question correct: new_place += 1
-    #
+    playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
+                                user_id=session["user_id"])
 
     boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                    roomnumber=roomnumber)
+                                    roomnumber=playerdata[0]["roomnumber"])
+
+    current_player = playerdata[0]["username"]
 
     for otherplayer in boarddata:
 
@@ -213,10 +178,6 @@ def compute_turn():
 
             db.execute("UPDATE rooms SET turn = 4 WHERE username = :username",
                         username=current_player)
-
-            db.execute("UPDATE rooms SET place = :place WHERE username = :username",
-                        username=current_player,
-                        place=new_place)
 
     return redirect("/board")
 
