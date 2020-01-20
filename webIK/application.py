@@ -76,7 +76,7 @@ def existingroom():
                         username=username, roomnumber=roomnumber, place=1, turn=turn, turn_fixed=turn)
         else:
             return apology("This username already exists in this room, use log in")
-        return redirect("/viewboard")
+        return redirect("/board")
     else:
         return render_template("existingroom.html")
 
@@ -96,7 +96,7 @@ def login():
         if len(rows) != 1:
             return apology("invalid username and/or roomname", 403)
         session["user_id"] = rows[0]["user_id"]
-        return redirect("/viewboard")
+        return redirect("/board")
     else:
         return render_template("login.html")
 
@@ -131,8 +131,6 @@ def board():
 
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
-
-    print(boarddata)
 
     return render_template("board.html",
                             boarddata=boarddata,
