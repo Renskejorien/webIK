@@ -135,6 +135,7 @@ def question():
             # Saves right answer (A, B, C or D) in the session
             session["correct_answer"] = answer_converter[i - 1]
 
+    # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
     return render_template("questions.html", data=q_a)
 
 @app.route("/answer_check", methods=["GET"])
