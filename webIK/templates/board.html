@@ -11,7 +11,7 @@
         <link href="/static/players.css" rel="stylesheet">
     </head>
 
-    <body onload="myFunction()">
+    <body>
         <div class="hexrow">
             <div id="1">
                 <p class="p1">START</p class="p1">
@@ -128,10 +128,13 @@
 
         <div id="pin1" class="pin"></div>
 
-        <form id="rolldice" action="/roll_dice" method="post">
-            <button class="btn btn-primary" type="submit">Roll the dice!</button>
-        </form>
+        <button onclick="move1()">Move1</button>
+        <button onclick="move2()">Move2</button>
+        <button onclick="move3()">Move3</button>
+        <button onclick="move4()">Move4</button>
         <br></br>
+        <button onclick="movestart()"><img src="https://gifimage.net/wp-content/uploads/2017/10/dice-rolling-gif-1.gif" alt="" width=100 /></button>
+        </br>
         <button onclick="movestart()">Back to start</button>
 
         <div id="player1" class="circleBase player1"></div>
@@ -141,24 +144,13 @@
     </body>
 
     <script>
-
-        function init() {
-            var place1 = boarddata[0]["place"];
-            var place2 = boarddata[1]["place"];
-            var place3 = boarddata[2]["place"];
-            var place4 = boarddata[3]["place"];
-
-            move1(place1);
-            move2(place2);
-            move3(place3);
-            move4(place4);
-        }
-
-        $('#registerForm').submit(function() {
-            $.get('/roll_dice?playerdata=' + playerdata);
-        });
+        var place1 = 1;
+        var place2 = 1;
+        var place3 = 1;
+        var place4 = 1;
 
         function move(player, place){
+            place += Math.ceil(Math.random() * 3);
             var pin = document.getElementById(place);
             var coor = pin.getBoundingClientRect();
             var d = document.getElementById(player);
@@ -168,16 +160,16 @@
             return place;
         }
 
-        function move1(place1){
+        function move1(){
             place1 = move('player1', place1);
         }
-        function move2(place2){
+        function move2(){
             place2 = move('player2', place2);
         }
-        function move3(place3){
+        function move3(){
             place3 = move('player3', place3);
         }
-        function move4(place4){
+        function move4(){
             place4 = move('player4', place4);
         }
         function movestart(){

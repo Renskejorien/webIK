@@ -69,11 +69,15 @@ def existingroom():
         in_room = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)
         if len(in_room) == 0:
             return apology("This room does not exist")
+        elif len(in_room) == 4:
+            return apology("This room already contains the maximum of 4 players")
         turn = len(in_room) + 1
         result = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber AND username= :username", roomnumber=roomnumber, username=username)
         if not result:
-            db.execute("INSERT INTO rooms (roomnumber, username, place, turn, turn_fixed) VALUES(:roomnumber, :username, :place, :turn, :turn_fixed)",
-                        username=username, roomnumber=roomnumber, place=1, turn=turn, turn_fixed=turn)
+            category = db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)[0]['category']
+            print(category)
+            db.execute("INSERT INTO rooms (roomnumber, username, place, turn, category, turn_fixed) VALUES(:roomnumber, :username, :place, :turn, :category, :turn_fixed)",
+                        username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn)
         else:
             return apology("This username already exists in this room, use log in")
         return redirect("/board")
@@ -101,6 +105,7 @@ def login():
         return render_template("login.html")
 
 @app.route("/questions", methods=["GET", "POST"])
+@login_required
 def question():
     """Handles a new question"""
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
@@ -123,6 +128,7 @@ def question():
     # return render_template("questions.html")
 
 @app.route("/board")
+@login_required
 def board():
     """Handles a new question"""
 
@@ -137,6 +143,7 @@ def board():
                             playerdata=playerdata)
 
 @app.route("/roll_dice")
+@login_required
 def roll_dice():
 
     playerdata = request.args.get('playerdata', '')

@@ -17,28 +17,29 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-        <title><img src="doc/Peanuts.jpg" alt=""></img>"PEANUTS": {% block title %}{% endblock %}</title>
+        <title><img src="doc/Peanuts.jpg" alt=""/>"PEANUTS": {% block title %}{% endblock %}</title>
 
     </head>
 
     <body>
 
         <nav class="navbar navbar-expand-md navbar-dark bg-dark border">
-            <a class="navbar-brand" href="/"><span class="white"><img src="/doc/Peanuts.jpg" width="30" height="30" alt="">PEANUTS</span></a>
+            <a class="navbar-brand" href="/"><span class="white"><img src="/doc/Peanuts.jpg" width="30" height="30" alt=""/>PEANUTS</span></a>
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbar">
                 {% if not session.user_id %}
                     <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log In</a></li>
                         <li class="nav-item"><a class="nav-link" href="/viewboard">View Board</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/questions">View Questions</a></li>
                     </ul>
                 {% else %}
                     <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                        <!-- die hieronder verwijderen-->
                         <li class="nav-item"><a class="nav-link" href="/questions">View Questions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/newroom">Create new team</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/existingroom">Join existing team</a></li>
                         <li class="nav-item"><a class="nav-link" href="/board">View Board</a></li>
                     </ul>
                 {% endif %}
