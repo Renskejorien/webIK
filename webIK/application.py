@@ -122,15 +122,33 @@ def question():
     # return render_template("questions.html")
 
 @app.route("/board")
-def board(roomnumber, username):
+def board():
     """Handles a new question"""
+
+    #
+    #
+    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
+    #
+    # waarchijnlijk met request.form.get("username")
+
+    roomnumber = request.args.get('username', '')
+
+    username = request.args.get('wa8w', '')
+
+    #
+    #
+    #
+    #
+    #
 
     if roomnumber and username:
 
-        boarddata = db.execute("SELECT place, turn FROM rooms WHERE roomnumber = :roomnumber",
+        boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
                                     roomnumber=roomnumber)
 
-        playerdata = db.execute("SELECT place, turn FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
+        # Vergeet bij deze twee niet turn_fixed toe te voegen!
+
+        playerdata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
                                     roomnumber=roomnumber,
                                     username=username)
 
@@ -141,6 +159,91 @@ def board(roomnumber, username):
     else:
 
         redirect("/")
+
+@app.route("/roll_dice")
+def roll_dice():
+
+    #
+    #
+    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
+    #
+    #
+
+    current_player = request.args.get('username', '')
+
+    roomnumber = request.args.get('DitIsNietDeManier', '')
+
+    # Behalve roomnumber, fijn als die eigenlijk altijd aanwezig is, zoals een session id
+    # Hoe?
+    #
+    #
+    #
+
+    dobbelsteen = random.randrange(1,4,1)
+
+    current_place = db.execute("SELECT place FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
+                                    roomnumber=roomnumber,
+                                    username=current_player)
+
+    new_place = current_place + dobbelsteen
+
+    # TODO:
+    # Pak uit een database welk vakje de speler dan op staat, en dus welke vraag die moet krijgen
+    # Moeten we deze meegeven aan question?
+
+    return redirect("/question",
+                    new_place=new_place)
+
+@app.route("/compute_turn")
+def compute_turn():
+
+    # TODO:
+    # Kom dan hier terug, en doe het volgende:
+    #
+
+    #
+    #
+    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
+    #
+    #
+
+    current_player = request.args.get('username', '')
+
+    roomnumber = request.args.get('DitIsNietDeManier', '')
+
+    new_place = request.args.get('DitIsNietDeManier', '')
+
+    # Behalve roomnumber, fijn als die eigenlijk altijd aanwezig is, zoals een session id
+    # Hoe?
+    #
+    #
+    #
+
+    # TODO:
+    # If question correct: new_place += 1
+    #
+
+    boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
+                                    roomnumber=roomnumber)
+
+    for otherplayer in boarddata:
+
+        if otherplayer["username"] != current_player:
+
+            db.execute("UPDATE rooms SET turn = turn - 1 WHERE username = :username",
+                        username=otherplayer["username"])
+
+        else:
+
+            db.execute("UPDATE rooms SET turn = 4 WHERE username = :username",
+                        username=current_player)
+
+            db.execute("UPDATE rooms SET place = :place WHERE username = :username",
+                        username=current_player,
+                        place=new_place)
+
+    return redirect("/board")
+
 
 @app.route("/viewboard")
 def viewboard():
