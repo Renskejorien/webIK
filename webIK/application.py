@@ -156,6 +156,8 @@ def board():
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
+    print(boarddata, len(boarddata))
+
     return render_template("board.html",
                             boarddata=boarddata,
                             playerdata=playerdata)

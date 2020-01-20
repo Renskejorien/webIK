@@ -142,15 +142,30 @@
 
     <script>
         function init() {
-            var place1 = boarddata[0]["place"];
-            var place2 = boarddata[1]["place"];
-            var place3 = boarddata[2]["place"];
-            var place4 = boarddata[3]["place"];
-
-            move1(place1);
-            move2(place2);
-            move3(place3);
-            move4(place4);
+            var length = 0;
+            var maxlength = '{{ boarddata }}'.length;
+            for (user in '{{ boarddata }}') {
+                length += 1;
+                if (length > 0) {
+                var place1 = user["place"];
+                move1(place1);
+                }
+                if (length > 1) {
+                    var place2 = user["place"];
+                    move2(place2);
+                }
+                if (length > 2) {
+                    var place3 = user["place"];
+                    move3(place3);
+                }
+                if (length > 3) {
+                    var place4 = user["place"];
+                    move4(place4);
+                }
+                if (maxlength == length) {
+                    break;
+                }
+            }
         }
 
         $('#registerForm').submit(function() {
@@ -165,20 +180,19 @@
             d.style.top = coor.top + 30 + "px";
             d.style.zIndex = 100;
             d.style.opacity = "1";
-            return place;
         }
 
         function move1(place1){
-            place1 = move('player1', place1);
+            move('player1', place1);
         }
         function move2(place2){
-            place2 = move('player2', place2);
+            move('player2', place2);
         }
         function move3(place3){
-            place3 = move('player3', place3);
+            move('player3', place3);
         }
         function move4(place4){
-            place4 = move('player4', place4);
+            move('player4', place4);
         }
         function movestart(){
             place0 = 1;
