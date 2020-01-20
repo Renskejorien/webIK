@@ -64,24 +64,24 @@ def existingroom():
     if request.method == "POST":
         username = request.form.get("username")
         roomnumber = request.form.get("roomnumber")
-        # Check if username is unique
-        result = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber AND username= :username", roomnumber=roomnumber, username=username)
-        print(username, result)
-        if result:
-            return apology("This username already exists in this room")
+
         in_room = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)
         if len(in_room) == 0:
             return apology("This room does not exist")
         turn = len(in_room) + 1
-        db.execute("INSERT INTO rooms (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)",
-                    username=username, roomnumber=roomnumber, place=1, turn=turn)
+        result = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber AND username= :username", roomnumber=roomnumber, username=username)
+        if not result:
+            db.execute("INSERT INTO rooms (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)",
+                        username=username, roomnumber=roomnumber, place=1, turn=turn)
+        else:
+            return apology("This username already exists in this room, use log in")
         return redirect("/viewboard")
     else:
         return render_template("existingroom.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Add player to room"""
+    """Log player in to show board"""
     if request.method == "POST":
         username = request.form.get("username")
         roomnumber = request.form.get("roomnumber")
