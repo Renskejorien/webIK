@@ -52,9 +52,10 @@ def newroom():
         exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
         while exists:
             roomnumber = random.randint(00000, 99999)
-        db.execute("INSERT INTO rooms (roomnumber, username, category, place, turn) VALUES(:roomnumber, :username, :category, :place, :turn)",
-                    username=username, roomnumber=roomnumber, category=category, place=1, turn=1)
-        return redirect("/viewboard")
+        db.execute("INSERT INTO rooms (roomnumber, username, category, place, turn, turn_fixed) VALUES(:roomnumber, :username, :category, :place, :turn, :turn_fixed)",
+                    username=username, roomnumber=roomnumber, category=category, place=1, turn=1, turn_fixed=1)
+        flash("Your roomcode will be {}".format(roomnumber))
+        return render_template("login.html")
     else:
         return render_template("newroom.html")
 
@@ -71,8 +72,8 @@ def existingroom():
         turn = len(in_room) + 1
         result = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber AND username= :username", roomnumber=roomnumber, username=username)
         if not result:
-            db.execute("INSERT INTO rooms (roomnumber, username, place, turn) VALUES(:roomnumber, :username, :place, :turn)",
-                        username=username, roomnumber=roomnumber, place=1, turn=turn)
+            db.execute("INSERT INTO rooms (roomnumber, username, place, turn, turn_fixed) VALUES(:roomnumber, :username, :place, :turn, :turn_fixed)",
+                        username=username, roomnumber=roomnumber, place=1, turn=turn, turn_fixed=turn)
         else:
             return apology("This username already exists in this room, use log in")
         return redirect("/viewboard")
@@ -125,40 +126,15 @@ def question():
 def board():
     """Handles a new question"""
 
-    #
-    #
-    # DIT KLOPT NOG NIET, VIND MOGELIJKHEID OM DEZE VARIABELEN TE VERKRIJGEN
-    #
-    # waarchijnlijk met request.form.get("username")
+    playerdata = db.execute("SELECT roomnumber, username, place, turn, turn_fixed FROM rooms WHERE user_id = :user_id",
+                                user_id=session["user_id"])
 
-    roomnumber = request.args.get('username', '')
+    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
+                                roomnumber=playerdata[0]["roomnumber"])
 
-    username = request.args.get('wa8w', '')
-
-    #
-    #
-    #
-    #
-    #
-
-    if roomnumber and username:
-
-        boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                    roomnumber=roomnumber)
-
-        # Vergeet bij deze twee niet turn_fixed toe te voegen!
-
-        playerdata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber AND username = :username",
-                                    roomnumber=roomnumber,
-                                    username=username)
-
-        return render_template("board.html",
-                                boarddata=boarddata,
-                                playerdata=playerdata)
-
-    else:
-
-        redirect("/")
+    return render_template("board.html",
+                            boarddata=boarddata,
+                            playerdata=playerdata)
 
 @app.route("/roll_dice")
 def roll_dice():
