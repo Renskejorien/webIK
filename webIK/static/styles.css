@@ -14,6 +14,15 @@ nav .navbar-brand .red
     color: #ea433b;
 }
 
+.card {
+    background-color: linear-gradient(60deg, red, yellow);
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+}
+
+.border-box { background-clip: border-box; }
+
 main .form-control
 {
     /* center form controls */

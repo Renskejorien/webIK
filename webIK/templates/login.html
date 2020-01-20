@@ -5,13 +5,19 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/login", method="POST">
-        <div class="form-group">
-            <input class="form-control" name="username" placeholder="Username" type="text">
+    <div class="card" style="width: 25rem;">
+        <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Card content.</p>
+            <form action="/login", method="POST">
+                <div class="form-group">
+                    <input class="form-control" name="username" placeholder="Username" type="text">
+                </div>
+                <div>
+                    <input class="form-control" name="roomnumber" placeholder="Room number" type="number">
+                </div>
+                <p></br><button class="btn btn-outline-dark" type="submit">Play Game!</button></p>
+            </form>
         </div>
-        <div>
-            <input class="form-control" name="roomnumber" placeholder="Room number" type="number">
-        </div>
-        <button class="btn btn-primary" type="submit">Play Game!</button>
-    </form>
+    </div>
 {% endblock %}
