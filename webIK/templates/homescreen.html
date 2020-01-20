@@ -5,7 +5,13 @@
 {% endblock %}
 
 {% block main %}
-    <a href="/newroom"><button class="btn btn-primary" name="newroom">Create room</button></a>
-    <a href="/existingroom"><button class="btn btn-primary" name="existingroom">Add to existing room</button></a>
-    <a href="/login"><button class="btn btn-primary" name="login">Login existing game</button></a>
+    <div class="card" style="width: 25rem;">
+        <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Card content.</p>
+            <p><a href="/newroom"><button class="btn btn-outline-dark" name="newroom">Create room</button></a></p>
+            <p><a href="/existingroom"><button class="btn btn-outline-dark" name="existingroom">Join room</button></a></p>
+            <p><a href="/login"><button class="btn btn-outline-dark" name="login">Login in room</button></a></p>
+        </div>
+    </div>
 {% endblock %}
