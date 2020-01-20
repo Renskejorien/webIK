@@ -13,7 +13,7 @@
 
     <body onload="init()">
         <div class="hexrow">
-            <div id="1">
+            <div id="1" class="blue">
                 <p class="p1">START</p class="p1">
                 <div></div>
                 <div></div>
@@ -23,7 +23,7 @@
                 <div></div>
                 <div></div>
             </div>
-            <div id="7">
+            <div id="7" class="pink">
                 <p class="p1">7</p class="p1">
                 <div></div>
                 <div></div>
@@ -33,7 +33,7 @@
                 <div></div>
                 <div></div>
             </div>
-            <div id="12">
+            <div id="12" class="purple">
                 <p class="p1">12, RISKY</p class="p1">
                 <div></div>
                 <div></div>
@@ -41,37 +41,37 @@
         </div>
 
         <div class="hexrow">
-            <div id="2">
+            <div id="2" class="green">
                 <p class="p1">2</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="3">
+            <div id="3" class="pink">
                 <p class="p1" id="3p">3</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="6">
-                <p class="p1">6</p class="p1">
+            <div id="6" class="green">
+                <p class="p1" class="green">6</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="8">
+            <div id="8" class="purple">
                 <p class="p1">8</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="11">
+            <div id="11" class="pink">
                 <p class="p1">11</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="13">
+            <div id="13" class="blue">
                 <p class="p1">13</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="16">
+            <div id="16" class="purple">
                 <p class="p1">16</p class="p1">
                 <div></div>
                 <div></div>
@@ -84,42 +84,42 @@
                 <div></div>
                 <div></div>
             </div>
-            <div id="4">
+            <div id="4" class="purple">
                 <p class="p1">4</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="5">
+            <div id="5" class="blue">
                 <p class="p1">5, RISKY</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="9">
+            <div id="9" class="blue">
                 <p class="p1">9</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="10">
+            <div id="10" class="green">
                 <p class="p1">10</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="14">
+            <div id="14" class="green">
                 <p class="p1">14</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="15">
+            <div id="15" class="pink">
                 <p class="p1">15</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="17">
+            <div id="17" class="blue">
                 <p class="p1">17</p class="p1">
                 <div></div>
                 <div></div>
             </div>
-            <div id="18">
+            <div id="18" class="green">
                 <p class="p1">FINISH</p class="p1">
                 <div></div>
                 <div></div>
@@ -129,7 +129,10 @@
         <div id="pin1" class="pin"></div>
 
         <form id="rolldice" action="/roll_dice" method="post">
-            <button class="btn btn-primary" type="submit">Roll the dice!</button>
+            {% if not session.user_id %}
+                <button class="btn btn-primary" type="button">Roll the dice!</button>
+            {% else %}
+                <button class="btn btn-primary" type="submit">Roll the dice!</button>
         </form>
         <br></br>
         <button onclick="movestart()">Back to start</button>
