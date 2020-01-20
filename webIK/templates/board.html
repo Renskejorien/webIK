@@ -142,9 +142,13 @@
 
     <script>
         function init() {
+            var data = '{{ boarddata }}';
+            document.getElementById("14").innerHTML = data;
             var length = 0;
-            var maxlength = '{{ boarddata }}'.length;
-            for (user in '{{ boarddata }}') {
+            var maxlength = data.length;
+            for (user in data) {
+                document.getElementById("15").innerHTML = user;
+                break;
                 length += 1;
                 if (length > 0) {
                 var place1 = user["place"];

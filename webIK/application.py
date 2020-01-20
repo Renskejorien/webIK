@@ -110,9 +110,9 @@ def question():
     """Handles a new question"""
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
     data = requests.get(URL).json()
-    
+
     getal = random.randrange(2, 6)
-    
+
     q_a = []
     q_a.append(data["results"][0]["question"])
     correct_answer = data["results"][0]["correct_answer"]
@@ -128,7 +128,7 @@ def question():
             q_a.append(data["results"][0]["correct_answer"])
 
     answer_converter = {1:A, 2:B, 3:C, 4:D}
-    
+
     for j in range(1, 5):
         if q_a[j] == correct_answer:
             abcd = answer_converter[j]
@@ -157,6 +157,8 @@ def board():
                                 roomnumber=playerdata[0]["roomnumber"])
 
     print(boarddata, len(boarddata))
+    for user in boarddata:
+        print(user["place"])
 
     return render_template("board.html",
                             boarddata=boarddata,
