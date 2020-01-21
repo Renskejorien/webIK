@@ -5,13 +5,21 @@
 {% endblock %}
 
 {% block main %}
-    <div class="card" style="width: 25rem;">
+    <div class="card" style="width: 30rem;">
         <div class="card-body">
             <h4 class="card-title">Welcome to PEANUTS</h4>
-            <p class="card-text">It may seem peanuts, but it's deffinetly not.</p>
+            <h9 class="card-text">It may seem peanuts, but it's deffinetly not. This game is a Trivia boardgame that you can play in a group of 4 people.</h9>
+            <p></p>
             <p class="red"><a href="/newroom"><button class="btn btn-outline-dark" name="newroom">Create room</button></a></p>
             <p><a href="/existingroom"><button class="btn btn-outline-dark" name="existingroom">Join room</button></a></p>
             <p><a href="/login"><button class="btn btn-outline-dark" name="login">Login in room</button></a></p>
         </div>
+        <p></p>
+        <div class="dropdown">
+        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Explanation</button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a href="#" style="color: black">One of you has to create a room and the others can join you room by your unique room code.
+                You have to respond in 24 hours when it's your turn.</a>
     </div>
 {% endblock %}
