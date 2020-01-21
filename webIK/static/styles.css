@@ -4,24 +4,18 @@ nav .navbar-brand
     font-size: xx-large;
 }
 
-/* colors for brand */
-nav .navbar-brand .blue
-{
-    color: #FF5733;
-}
-nav .navbar-brand .red
-{
-    color: #ea433b;
-}
-
 .card {
-    background-color: linear-gradient(60deg, red, yellow);
-    margin: 0 auto; /* Added */
-    float: none; /* Added */
-    margin-bottom: 10px; /* Added */
+    background: linear-gradient(#e66465, #9198e5);
+    margin: 0 auto;
+    float: none;
+    margin-bottom: 10px;
+    color: white;
 }
 
-.border-box { background-clip: border-box; }
+.card button {
+    color: white;
+    border: 2px solid white;
+}
 
 main .form-control
 {

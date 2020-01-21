@@ -36,11 +36,10 @@ Session(app)
 db = SQL("sqlite:///spel.db")
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def homescreen():
     """Shows homescreen"""
-    if request.method == "GET":
-        return render_template("homescreen.html")
+    return render_template("homescreen.html")
 
 @app.route("/newroom", methods=["GET", "POST"])
 def newroom():
@@ -48,12 +47,18 @@ def newroom():
     if request.method == "POST":
         username = request.form.get("username")
         category = request.form.get("category")
+
+        # Create a new roomnumber
         roomnumber = random.randint(00000, 99999)
         exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
         while exists:
             roomnumber = random.randint(00000, 99999)
+
+        # Get new player in database
         db.execute("INSERT INTO rooms (roomnumber, username, category, place, turn, turn_fixed) VALUES(:roomnumber, :username, :category, :place, :turn, :turn_fixed)",
                     username=username, roomnumber=roomnumber, category=category, place=1, turn=1, turn_fixed=1)
+
+        # Show roomnumber
         flash("Your roomcode will be {}".format(roomnumber))
         return render_template("login.html")
     else:
@@ -66,16 +71,17 @@ def existingroom():
         username = request.form.get("username")
         roomnumber = request.form.get("roomnumber")
 
+        # Check if room exists and room is not full
         in_room = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)
         if len(in_room) == 0:
             return apology("This room does not exist")
         elif len(in_room) == 4:
             return apology("This room already contains the maximum of 4 players")
+
         turn = len(in_room) + 1
         result = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber AND username= :username", roomnumber=roomnumber, username=username)
         if not result:
             category = db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)[0]['category']
-            print(category)
             db.execute("INSERT INTO rooms (roomnumber, username, place, turn, category, turn_fixed) VALUES(:roomnumber, :username, :place, :turn, :category, :turn_fixed)",
                         username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn)
         else:
@@ -90,16 +96,20 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         roomnumber = request.form.get("roomnumber")
+
+        # Username and password have to be filled in
         if not username or not roomnumber:
             return apology("must provide username and password", 403)
 
-        # Query database for username
         rows = db.execute("SELECT * FROM rooms WHERE username = :username AND roomnumber= :roomnumber", username=username, roomnumber=roomnumber)
 
         # Ensure username exists and password is correct
         if len(rows) != 1:
             return apology("invalid username and/or roomname", 403)
+
+        # Set new timestamp and log user in
         session["user_id"] = rows[0]["user_id"]
+        db.execute("UPDATE rooms SET date = current_timestamp WHERE user_id = :user_id", user_id=session["user_id"])
         return redirect("/board")
     else:
         return render_template("login.html")
@@ -108,15 +118,21 @@ def login():
 # @login_required
 def question():
     """Handles a new question"""
+    # Get the questions and answer(s) from API
     URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
     data = requests.get(URL).json()
 
+    # Choose the place for the right answer
     getal = random.randrange(2, 6)
 
+    # Create list with the question[0], and 4 possible answers in random order
     q_a = []
     q_a.append(data["results"][0]["question"])
-    correct_answer = data["results"][0]["correct_answer"]
 
+    # To make sure the right letter (for the right answer) is saved
+    answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
+
+    # Makes a list with 3 wrong answers and a good answer in a random order
     for i in range(2, 6):
         if i < getal:
             q_a.append(data["results"][0]["incorrect_answers"][i - 2])
@@ -126,27 +142,24 @@ def question():
 
         else:
             q_a.append(data["results"][0]["correct_answer"])
+            # Saves right answer (A, B, C or D) in the session
+            session["correct_answer"] = answer_converter[i - 1]
 
-    answer_converter = {1:A, 2:B, 3:C, 4:D}
-
-    for j in range(1, 5):
-        if q_a[j] == correct_answer:
-            abcd = answer_converter[j]
-
-    session["correct_answer"] = abcd
-
+    # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
     return render_template("questions.html", data=q_a)
 
 @app.route("/answer_check", methods=["GET"])
 def answer_check():
     """Checks if question is answered correctly"""
-    if session["correct_answer"] == request.form.get('your_answer'):
+    # return jsonify(session["correct_answer"] != request.form.get('your_answer'))
+    # return jsonify(True)
+    if session["correct_answer"] == request.args.get('your_answer'):
         return jsonify(True)
     else:
         return jsonify(False)
 
 @app.route("/board")
-@login_required
+# @login_required
 def board():
     """Handles a new question"""
 
@@ -165,7 +178,7 @@ def board():
                             playerdata=playerdata)
 
 @app.route("/roll_dice")
-@login_required
+# @login_required
 def roll_dice():
 
     playerdata = request.args.get('playerdata', '')
@@ -184,6 +197,7 @@ def roll_dice():
     return redirect("/compute_turn")
 
 @app.route("/compute_turn")
+# @login_required
 def compute_turn():
 
     playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
@@ -210,15 +224,18 @@ def compute_turn():
 
 
 @app.route("/viewboard")
+# @login_required
 def viewboard():
 
     return render_template("board.html")
 
 @app.route("/winner", methods=["POST"])
+# @login_required
 def winner():
     return render_template("winner.html")
 
 @app.route("/loser", methods=["POST"])
+# @login_required
 def loser():
     return render_template("loser.html")
 
