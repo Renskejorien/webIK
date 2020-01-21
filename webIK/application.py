@@ -149,6 +149,7 @@ def question():
     return render_template("questions.html", data=q_a)
 
 @app.route("/answer_check", methods=["GET"])
+# @login_required
 def answer_check():
     """Checks if question is answered correctly"""
     # return jsonify(session["correct_answer"] != request.form.get('your_answer'))
