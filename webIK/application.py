@@ -134,7 +134,7 @@ def question():
                     roomnumber=request.form.get("roomnumber"), username=request.form.get("username")))
 
     # Get the questions and answer(s) from API
-    URL = 'https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple'
+    URL = str('https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple')
     data = requests.get(URL).json()
 
     # Choose the place for the right answer
@@ -142,7 +142,7 @@ def question():
 
     # Create list with the question[0], and 4 possible answers in random order
     q_a = []
-    q_a.append(data["results"][0]["question"])
+    q_a.append(str(data["results"][0]["question"]))
 
     # To make sure the right letter (for the right answer) is saved
     answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
