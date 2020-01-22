@@ -2,7 +2,6 @@ import os
 import random
 import urllib.request
 import requests
-import json
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -130,9 +129,9 @@ def login():
 def question():
     """Handles a new question"""
     # get the difficulty for this player from database
-    difficulty = str(db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber AND username= :username",
+    difficulty = str(db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber AND username= :username", 
                     roomnumber=request.form.get("roomnumber"), username=request.form.get("username")))
-
+    
     # Get the questions and answer(s) from API
     URL = 'https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple'
     data = requests.get(URL).json()
@@ -189,20 +188,19 @@ def board():
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
-    boarddatajs = json.dumps(boarddata)
+    print(playerdata, boarddata, len(boarddata))
+    for user in boarddata:
+        print(user["place"])
 
     return render_template("board.html",
                             boarddata=boarddata,
-                            playerdata=playerdata,
-                            boarddatajs=boarddatajs)
+                            playerdata=playerdata)
 
 @app.route("/roll_dice")
 # @login_required
 def roll_dice():
 
     playerdata = request.args.get('playerdata', '')
-
-    print("playerdata:", playerdata)
 
     dobbelsteen = random.randrange(1,4,1)
 

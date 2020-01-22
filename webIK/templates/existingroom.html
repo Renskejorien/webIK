@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Index
+    Join room
 {% endblock %}
 
 {% block main %}
     <div class="card" style="width: 25rem;">
         <div class="card-body">
-            <h4 class="card-title">Card title</h4>
-            <p class="card-text">Card content.</p>
+            <h4 class="card-title">Join an existing room</h4>
+            <p class="card-text">Get your roomnumber from the player that created your room and choose a username.</p>
             <form action="/existingroom" method="post">
                 <div class="form-group">
                     <input class="form-control" name="username" placeholder="Username" type="text">
