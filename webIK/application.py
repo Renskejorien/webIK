@@ -191,7 +191,7 @@ def board():
 
     print("real roomnumber:", roomnumber)
 
-    if playerdata[0]["turn"] == 1:
+    if int(playerdata[0]["turn"]) == 1:
         playerturn = True
     else:
         playerturn = False
@@ -209,20 +209,25 @@ def roll_dice(roomnumber):
 
     #roomnumber = request.form.get('roomnumber')
 
-    print("roomnumber:", roomnumber)
+    playerdata = db.execute("SELECT turn FROM rooms WHERE user_id = :user_id",
+                                user_id=session["user_id"])
 
-    dobbelsteen = random.randrange(1,4,1)
+    if int(playerdata[0]["turn"]) == 1:
 
-    db.execute("UPDATE rooms SET place = place + :dobbelsteen WHERE roomnumber = :roomnumber AND user_id = :user_id",
-                roomnumber=roomnumber,
-                user_id=session["user_id"],
-                dobbelsteen=dobbelsteen)
+        print("roomnumber:", roomnumber)
 
-    # TODO:
-    # Plaats hier code om een vraag te beantwoorden of redirect daar naar toe
-    #
+        dobbelsteen = random.randrange(1,4,1)
 
-    return redirect("/questions")
+        db.execute("UPDATE rooms SET place = place + :dobbelsteen WHERE roomnumber = :roomnumber AND user_id = :user_id",
+                    roomnumber=roomnumber,
+                    user_id=session["user_id"],
+                    dobbelsteen=dobbelsteen)
+
+        return redirect("/questions")
+
+    else:
+
+        flash("It's not your turn")
 
 @app.route("/compute_turn/")
 # @login_required
