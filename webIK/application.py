@@ -129,38 +129,45 @@ def login():
 @login_required
 def question():
     """Handles a new question"""
-    # get the difficulty for this player from database
-    difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
+    # check if it's your turn
+    if db.execute("SELECT turn FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['turn'] == 1:
 
-    # Get the questions and answer(s) from API
-    URL = str('https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple')
-    data = requests.get(URL).json()
+        # get the difficulty for this player from database
+        difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
 
-    # Choose the place for the right answer
-    getal = random.randrange(2, 6)
+        # Get the questions and answer(s) from API
+        URL = str('https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple')
+        data = requests.get(URL).json()
 
-    # Create list with the question[0], and 4 possible answers in random order
-    q_a = []
-    q_a.append(str(data["results"][0]["question"]))
+        # Choose the place for the right answer
+        getal = random.randrange(2, 6)
 
-    # To make sure the right letter (for the right answer) is saved
-    answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
+        # Create list with the question[0], and 4 possible answers in random order
+        q_a = []
+        q_a.append(str(data["results"][0]["question"]))
 
-    # Makes a list with 3 wrong answers and a good answer in a random order
-    for i in range(2, 6):
-        if i < getal:
-            q_a.append(data["results"][0]["incorrect_answers"][i - 2])
+        # To make sure the right letter (for the right answer) is saved
+        answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
 
-        elif i > getal:
-            q_a.append(data["results"][0]["incorrect_answers"][i - 3])
+        # Makes a list with 3 wrong answers and a good answer in a random order
+        for i in range(2, 6):
+            if i < getal:
+                q_a.append(data["results"][0]["incorrect_answers"][i - 2])
 
-        else:
-            q_a.append(data["results"][0]["correct_answer"])
-            # Saves right answer (A, B, C or D) in the session
-            session["correct_answer"] = answer_converter[i - 1]
+            elif i > getal:
+                q_a.append(data["results"][0]["incorrect_answers"][i - 3])
 
-    # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
-    return render_template("questions.html", data=q_a)
+            else:
+                q_a.append(data["results"][0]["correct_answer"])
+                # Saves right answer (A, B, C or D) in the session
+                session["correct_answer"] = answer_converter[i - 1]
+
+        # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
+        return render_template("questions.html", data=q_a)
+
+    else:
+        return redirect("/board")
+
 
 @app.route("/answer_check", methods=["GET"])
 @login_required
