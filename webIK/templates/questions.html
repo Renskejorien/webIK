@@ -31,9 +31,7 @@
         $('button').click(function()
         {
             var your_answer = this.id
-            $.get('/answer_check', {your_answer: your_answer}
-            , function(response)
-            {
+            $.get('/answer_check', {your_answer: your_answer}, function(response) {
                 if (response == false)
                 {
                     alert("Wrong answer!");
