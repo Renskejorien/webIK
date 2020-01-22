@@ -257,15 +257,21 @@ def viewboard():
 
     return render_template("board.html")
 
-@app.route("/winner", methods=["POST"])
+@app.route("/winner", methods=["GET", "POST"])
 # @login_required
 def winner():
-    return render_template("winner.html")
+    if request.method == "POST":
+        return redirect("/")
+    else:
+        return render_template("winner.html")
 
-@app.route("/loser", methods=["POST"])
+@app.route("/loser", methods=["GET", "POST"])
 # @login_required
 def loser():
-    return render_template("loser.html")
+    if request.method == "POST":
+        return redirect("/")
+    else:
+        return render_template("loser.html")
 
 @app.route("/logout")
 def logout():
