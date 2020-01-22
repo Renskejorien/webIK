@@ -8,10 +8,10 @@
     <!-- https://github.com/CodeExplainedRepo/Multiple-Choice-Quiz-JavaScript -->
 
 {% block main %}
-    <div id="container">
+    <form id="container" action="/answer_check">
         <div id="quiz" style="display:contents">
-            <subtitle id="question">{{ data[0] }}</subtitle>
-            <div id="choices">
+            <subtbuitle id="question">{{ data[0] }}</subtitle>
+            <div action="/answer_check" id="choices">
                 <button class="choice" id="A">{{ data[1] }}</button>
                 <button class="choice" id="B">{{ data[2] }}</button>
                 <button class="choice" id="C">{{ data[3] }}</button>
@@ -25,23 +25,25 @@
             <div id="progress"></div>
         </div>
         <div id="scoreContainer" style="display:contents"></div>
-    </div>
+    </form>
 
     <script>
         $('button').click(function()
         {
             var your_answer = this.id
-            $.get('/answer_check', {your_answer: your_answer}, function(response)
-            {
-                if (response == false)
-                {
-                    alert("Wrong answer!");
-                }
-                else
-                {
-                    alert("Well done!");
-                }
-            });
+            $.get('/answer_check', {your_answer: your_answer}
+            // , function(response)
+            // {
+            //     if (response == false)
+            //     {
+            //         alert("Wrong answer!");
+            //     }
+            //     else
+            //     {
+            //         alert("Well done!");
+            //     }
+            // }
+            );
         });
     </script>
 
