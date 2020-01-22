@@ -48,6 +48,11 @@ def newroom():
         username = request.form.get("username")
         category = request.form.get("category")
 
+        # Check is username only contains letters or numbers
+        for character in username:
+            if not character.isalnum():
+                return apology("The username may only contain numbers or letters")
+
         # Create a new roomnumber
         roomnumber = random.randint(00000, 99999)
         exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
@@ -70,6 +75,11 @@ def existingroom():
     if request.method == "POST":
         username = request.form.get("username")
         roomnumber = request.form.get("roomnumber")
+
+        # Check is username only contains letters or numbers
+        for character in username:
+            if not character.isalnum():
+                return apology("The username may only contain numbers or letters")
 
         # Check if room exists and room is not full
         in_room = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)
@@ -174,7 +184,7 @@ def board():
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
-    print(boarddata, len(boarddata))
+    print(playerdata, boarddata, len(boarddata))
     for user in boarddata:
         print(user["place"])
 
