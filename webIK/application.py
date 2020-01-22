@@ -130,8 +130,7 @@ def login():
 def question():
     """Handles a new question"""
     # get the difficulty for this player from database
-    difficulty = str(db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber AND username= :username",
-                    roomnumber=request.form.get("roomnumber"), username=request.form.get("username")))
+    difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
 
     # Get the questions and answer(s) from API
     URL = 'https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple'
@@ -142,6 +141,7 @@ def question():
 
     # Create list with the question[0], and 4 possible answers in random order
     q_a = []
+    print("hoi", data, difficulty)
     q_a.append(data["results"][0]["question"])
 
     # To make sure the right letter (for the right answer) is saved
