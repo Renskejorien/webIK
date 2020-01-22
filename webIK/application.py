@@ -2,6 +2,7 @@ import os
 import random
 import urllib.request
 import requests
+import json
 
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
@@ -169,19 +170,20 @@ def board():
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
-    print(boarddata, len(boarddata))
-    for user in boarddata:
-        print(user["place"])
+    boarddatajs = json.dumps(boarddata)
 
     return render_template("board.html",
                             boarddata=boarddata,
-                            playerdata=playerdata)
+                            playerdata=playerdata,
+                            boarddatajs=boarddatajs)
 
 @app.route("/roll_dice")
 # @login_required
 def roll_dice():
 
     playerdata = request.args.get('playerdata', '')
+
+    print("playerdata:", playerdata)
 
     dobbelsteen = random.randrange(1,4,1)
 
