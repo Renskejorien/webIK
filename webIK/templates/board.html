@@ -128,9 +128,11 @@
 
         <div id="pin1" class="pin"></div>
 
-        <form id="rolldice" action="/roll_dice" method="post">
-            <button class="btn btn-primary" type="submit">Roll the dice!</button>
-        </form>
+        {% if not playerturn %}
+            <button class="btn btn-primary" type="button">Roll the dice!</button>
+        {% else %}
+            <button class="btn btn-primary" type="submit" onclick="roll_dice()">Roll the dice!</button>
+        {% endif %}
         <br></br>
         <button onclick="movestart()">Back to start</button>
 
@@ -143,7 +145,6 @@
     <script>
         function init() {
             var data = '{{ boarddatajs|safe }}';
-            console.log('{{ boarddatajs|safe }}', data);
             data = JSON.parse(data);
             var maxlength = data.length - 1;
             for (i in data) {
@@ -169,9 +170,11 @@
             }
         }
 
-        $('#registerForm').submit(function() {
-            $.get('/roll_dice?playerdata=' + '{{ playerdata }}');
-        });
+        function roll_dice() {
+            var roomnumber = Number('{{ roomnumber }}')
+
+            window.location.replace('/roll_dice/' + roomnumber);
+        }
 
         function move(player, place){
             var pin = document.getElementById(place);
