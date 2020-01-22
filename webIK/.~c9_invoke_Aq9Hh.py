@@ -129,45 +129,38 @@ def login():
 @login_required
 def question():
     """Handles a new question"""
-    # check if it's your turn
-    if db.execute("SELECT turn FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['turn'] == 1:
+    # get the difficulty for this player from database
+    difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
 
-        # get the difficulty for this player from database
-        difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
+    # Get the questions and answer(s) from API
+    URL = str('https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple')
+    data = requests.get(URL).json()
 
-        # Get the questions and answer(s) from API
-        URL = str('https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple')
-        data = requests.get(URL).json()
+    # Choose the place for the right answer
+    getal = random.randrange(2, 6)
 
-        # Choose the place for the right answer
-        getal = random.randrange(2, 6)
+    # Create list with the question[0], and 4 possible answers in random order
+    q_a = []
+    q_a.append(str(data["results"][0]["question"]))
 
-        # Create list with the question[0], and 4 possible answers in random order
-        q_a = []
-        q_a.append(str(data["results"][0]["question"]))
+    # To make sure the right letter (for the right answer) is saved
+    answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
 
-        # To make sure the right letter (for the right answer) is saved
-        answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
+    # Makes a list with 3 wrong answers and a good answer in a random order
+    for i in range(2, 6):
+        if i < getal:
+            q_a.append(data["results"][0]["incorrect_answers"][i - 2])
 
-        # Makes a list with 3 wrong answers and a good answer in a random order
-        for i in range(2, 6):
-            if i < getal:
-                q_a.append(data["results"][0]["incorrect_answers"][i - 2])
+        elif i > getal:
+            q_a.append(data["results"][0]["incorrect_answers"][i - 3])
 
-            elif i > getal:
-                q_a.append(data["results"][0]["incorrect_answers"][i - 3])
+        else:
+            q_a.append(data["results"][0]["correct_answer"])
+            # Saves right answer (A, B, C or D) in the session
+            session["correct_answer"] = answer_converter[i - 1]
 
-            else:
-                q_a.append(data["results"][0]["correct_answer"])
-                # Saves right answer (A, B, C or D) in the session
-                session["correct_answer"] = answer_converter[i - 1]
-
-        # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
-        return render_template("questions.html", data=q_a)
-
-    else:
-        return redirect("/board")
-
+    # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
+    return render_template("questions.html", data=q_a)
 
 @app.route("/answer_check", methods=["GET"])
 @login_required
@@ -182,7 +175,7 @@ def answer_check():
         return jsonify(False)
 
 @app.route("/board")
-@login_required
+# @login_required
 def board():
     """Handles a new question"""
 
@@ -209,7 +202,7 @@ def board():
                             roomnumber=roomnumber)
 
 @app.route("/roll_dice/<int:roomnumber>", methods=["GET"])
-@login_required
+# @login_required
 def roll_dice(roomnumber):
 
     #roomnumber = request.form.get('roomnumber')
@@ -235,40 +228,30 @@ def roll_dice(roomnumber):
         flash("It's not your turn")
 
 @app.route("/compute_turn/")
-@login_required
+# @login_required
 def compute_turn():
 
     playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
-    if int(playerdata[0]["turn"]) == 1:
+    boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
+                                    roomnumber=playerdata[0]["roomnumber"])
 
-        if int(playerdata[0]["place"]) >= 18:
+    current_player = playerdata[0]["username"]
 
-            redirect("/winner")
+    for otherplayer in boarddata:
 
-        boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                        roomnumber=playerdata[0]["roomnumber"])
+        if otherplayer["username"] != current_player:
 
-        current_player = playerdata[0]["username"]
+            db.execute("UPDATE rooms SET turn = turn - 1 WHERE username = :username",
+                        username=otherplayer["username"])
 
-        for otherplayer in boarddata:
+        else:
 
-            if otherplayer["username"] != current_player:
+            db.execute("UPDATE rooms SET turn = 4 WHERE username = :username",
+                        username=current_player)
 
-                db.execute("UPDATE rooms SET turn = turn - 1 WHERE username = :username",
-                            username=otherplayer["username"])
-
-            else:
-
-                db.execute("UPDATE rooms SET turn = 4 WHERE username = :username",
-                            username=current_player)
-
-        return redirect("/board")
-
-    else:
-
-        flash("It's not your turn")
+    return redirect("/board")
 
 @app.route("/winner", methods=["GET", "POST"])
 # @login_required
