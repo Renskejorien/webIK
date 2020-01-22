@@ -142,7 +142,7 @@ def question():
 
     # Create list with the question[0], and 4 possible answers in random order
     q_a = []
-    q_a.append(str(data["results"][0]["question"]))
+    q_a.append(data["results"][0]["question"])
 
     # To make sure the right letter (for the right answer) is saved
     answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
