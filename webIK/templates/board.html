@@ -148,7 +148,7 @@
             data = JSON.parse(data);
             var maxlength = data.length - 1;
             for (i in data) {
-                if (maxlength == 0 && i == 0) {
+                if (maxlength > -1 && i == 0) {
                 var place1 = data[i]["place"];
                 move1(place1);
                 }
