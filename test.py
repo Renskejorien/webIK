@@ -2,17 +2,23 @@ import requests
 import random
 
 
-URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
+difficulty = 'easy'
+
+# Get the questions and answer(s) from API
+URL = str('https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple')
 data = requests.get(URL).json()
 
+# Choose the place for the right answer
 getal = random.randrange(2, 6)
 
+# Create list with the question[0], and 4 possible answers in random order
 q_a = []
-q_a.append(data["results"][0]["question"])
-correct_answer = data["results"][0]["correct_answer"]
+q_a.append(str(data["results"][0]["question"]))
 
+# To make sure the right letter (for the right answer) is saved
 answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
 
+# Makes a list with 3 wrong answers and a good answer in a random order
 for i in range(2, 6):
     if i < getal:
         q_a.append(data["results"][0]["incorrect_answers"][i - 2])
@@ -22,9 +28,11 @@ for i in range(2, 6):
 
     else:
         q_a.append(data["results"][0]["correct_answer"])
-        kaas = answer_converter[i - 1]
+        # Saves right answer (A, B, C or D) in the session
+        answer = answer_converter[i - 1]
 
-print(kaas)
+
+print(q_a, answer)
 
 
 # @app.route("/questions", methods=["GET", "POST"])
