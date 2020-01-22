@@ -183,41 +183,50 @@ def answer_check():
 def board():
     """Handles a new question"""
 
-    playerdata = db.execute("SELECT roomnumber, username, place, turn, turn_fixed FROM rooms WHERE user_id = :user_id",
+    playerdata = db.execute("SELECT turn, roomnumber FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
-    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
+    boarddata = db.execute("SELECT place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
+
+    roomnumber = int(playerdata[0]["roomnumber"])
+
+    print("real roomnumber:", roomnumber)
+
+    if playerdata[0]["turn"] == 1:
+        playerturn = True
+    else:
+        playerturn = False
 
     boarddatajs = json.dumps(boarddata)
 
     return render_template("board.html",
-                            boarddata=boarddata,
-                            playerdata=playerdata,
-                            boarddatajs=boarddatajs)
+                            playerturn=playerturn,
+                            boarddatajs=boarddatajs,
+                            roomnumber=roomnumber)
 
-@app.route("/roll_dice")
+@app.route("/roll_dice/<int:roomnumber>", methods=["GET"])
 # @login_required
-def roll_dice():
+def roll_dice(roomnumber):
 
-    playerdata = request.args.get('playerdata', '')
+    #roomnumber = request.form.get('roomnumber')
 
-    print("playerdata:", playerdata)
+    print("roomnumber:", roomnumber)
 
     dobbelsteen = random.randrange(1,4,1)
 
-    db.execute("UPDATE rooms SET place = place + :dobbelsteen WHERE roomnumber = :roomnumber AND username = :username",
-                roomnumber=playerdata[0]["roomnumber"],
-                username=playerdata[0]["username"],
+    db.execute("UPDATE rooms SET place = place + :dobbelsteen WHERE roomnumber = :roomnumber AND user_id = :user_id",
+                roomnumber=roomnumber,
+                user_id=session["user_id"],
                 dobbelsteen=dobbelsteen)
 
     # TODO:
     # Plaats hier code om een vraag te beantwoorden of redirect daar naar toe
     #
 
-    return redirect("/compute_turn")
+    return redirect("/questions")
 
-@app.route("/compute_turn")
+@app.route("/compute_turn/")
 # @login_required
 def compute_turn():
 
@@ -265,6 +274,10 @@ def logout():
     """log user out"""
     session.clear()
     return redirect("/")
+
+@app.route("/favicon.ico")
+def favicon():
+    return "", 404
 
 def errorhandler(e):
     """Handle error"""
