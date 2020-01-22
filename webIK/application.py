@@ -130,11 +130,10 @@ def login():
 def question():
     """Handles a new question"""
     # get the difficulty for this player from database
-    difficulty = str(db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber AND username= :username",
-                    roomnumber=request.form.get("roomnumber"), username=request.form.get("username")))
+    difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
 
     # Get the questions and answer(s) from API
-    URL = 'https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple'
+    URL = str('https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple')
     data = requests.get(URL).json()
 
     # Choose the place for the right answer
