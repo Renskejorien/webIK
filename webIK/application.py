@@ -115,11 +115,15 @@ def login():
         return render_template("login.html")
 
 @app.route("/questions", methods=["GET", "POST"])
-# @login_required
+@login_required
 def question():
     """Handles a new question"""
+    # get the difficulty for this player from database
+    difficulty = str(db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber AND username= :username", 
+                    roomnumber=request.form.get("roomnumber"), username=request.form.get("username")))
+    
     # Get the questions and answer(s) from API
-    URL = 'https://opentdb.com/api.php?amount=1&type=multiple'
+    URL = 'https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple'
     data = requests.get(URL).json()
 
     # Choose the place for the right answer
@@ -127,7 +131,7 @@ def question():
 
     # Create list with the question[0], and 4 possible answers in random order
     q_a = []
-    q_a.append(data["results"][0]["question"])
+    q_a.append(str(data["results"][0]["question"]))
 
     # To make sure the right letter (for the right answer) is saved
     answer_converter = {1:'A', 2:'B', 3:'C', 4:'D'}
@@ -149,7 +153,7 @@ def question():
     return render_template("questions.html", data=q_a)
 
 @app.route("/answer_check", methods=["GET"])
-# @login_required
+@login_required
 def answer_check():
     """Checks if question is answered correctly"""
     # return jsonify(session["correct_answer"] != request.form.get('your_answer'))
