@@ -234,24 +234,34 @@ def compute_turn():
     playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
-    boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                    roomnumber=playerdata[0]["roomnumber"])
+    if int(playerdata[0]["turn"]) == 1:
 
-    current_player = playerdata[0]["username"]
+        if int(playerdata[0]["place"]) >= 18:
 
-    for otherplayer in boarddata:
+            redirect("/winner")
 
-        if otherplayer["username"] != current_player:
+        boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
+                                        roomnumber=playerdata[0]["roomnumber"])
 
-            db.execute("UPDATE rooms SET turn = turn - 1 WHERE username = :username",
-                        username=otherplayer["username"])
+        current_player = playerdata[0]["username"]
 
-        else:
+        for otherplayer in boarddata:
 
-            db.execute("UPDATE rooms SET turn = 4 WHERE username = :username",
-                        username=current_player)
+            if otherplayer["username"] != current_player:
 
-    return redirect("/board")
+                db.execute("UPDATE rooms SET turn = turn - 1 WHERE username = :username",
+                            username=otherplayer["username"])
+
+            else:
+
+                db.execute("UPDATE rooms SET turn = 4 WHERE username = :username",
+                            username=current_player)
+
+        return redirect("/board")
+
+    else:
+
+        flash("It's not your turn")
 
 @app.route("/winner", methods=["GET", "POST"])
 # @login_required
