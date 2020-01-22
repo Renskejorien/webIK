@@ -15,7 +15,7 @@
 .player1 {
     width: 100px;
     height: 100px;
-    background: blue;
+    background-image: url(https://i.pinimg.com/originals/45/eb/f1/45ebf1ee781a0acb5f1ce01b86f44aad.jpg);
     border: 3px black;
     opacity: 0;
     left: 10px;
@@ -25,7 +25,7 @@
 .player2 {
     width: 100px;
     height: 100px;
-    background: red;
+    background: url(https://i.pinimg.com/originals/87/71/2d/87712ddd3c1107e2df5d41e88eb1df90.jpg);
     border: 3px black;
     opacity: 0;
     left: 10px;
@@ -35,7 +35,7 @@
 .player3 {
     width: 100px;
     height: 100px;
-    background: yellow;
+    background: url(https://naldzgraphics.net/wp-content/uploads/2012/02/30-little-pattern.jpg);
     border: 3px black;
     opacity: 0;
     left: 10px;
@@ -45,7 +45,7 @@
 .player4 {
     width: 100px;
     height: 100px;
-    background: green;
+    background: url(https://image.shutterstock.com/image-vector/geometric-pattern-by-stripes-seamless-260nw-473460193.jpg);
     border: 3px black;
     opacity: 0;
     left: 10px;
