@@ -250,13 +250,6 @@ def compute_turn():
 
     return redirect("/board")
 
-
-@app.route("/viewboard")
-# @login_required
-def viewboard():
-
-    return render_template("board.html")
-
 @app.route("/winner", methods=["GET", "POST"])
 # @login_required
 def winner():
