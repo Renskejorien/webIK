@@ -238,8 +238,8 @@ def roll_dice(roomnumber):
 @login_required
 def compute_turn():
 
-    print("hij compute de turn")
-
+    print("hij compute d")
+    
     playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
