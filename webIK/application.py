@@ -177,7 +177,7 @@ def answer_check():
         return jsonify(False)
 
 @app.route("/board")
-# @login_required
+@login_required
 def board():
     """Handles a new question"""
 
@@ -204,7 +204,7 @@ def board():
                             roomnumber=roomnumber)
 
 @app.route("/roll_dice/<int:roomnumber>", methods=["GET"])
-# @login_required
+@login_required
 def roll_dice(roomnumber):
 
     #roomnumber = request.form.get('roomnumber')
@@ -230,7 +230,7 @@ def roll_dice(roomnumber):
         flash("It's not your turn")
 
 @app.route("/compute_turn/")
-# @login_required
+@login_required
 def compute_turn():
 
     playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
