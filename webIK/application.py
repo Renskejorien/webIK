@@ -170,12 +170,11 @@ def answer_check():
     # return jsonify(True)
     if session["correct_answer"] == request.form.get('your_answer'):
         db.execute("UPDATE rooms SET place = place + :place WHERE user_id = :user_id", user_id=session["user_id"], place=1)
-        flash("Yes, you gave the correct answer! :)")
-        # return jsonify(True)
+        # flash("Yes, you gave the correct answer! :)")
+        return jsonify(True)
     else:
-        flash("Aww, unfortunately that's not the correct answer :(")
-        # return jsonify(False)
-    return redirect("/board")
+        # flash("Aww, unfortunately that's not the correct answer :(")
+        return jsonify(False)
 
 @app.route("/board")
 # @login_required
@@ -263,15 +262,21 @@ def viewboard():
 
     return render_template("board.html")
 
-@app.route("/winner", methods=["POST"])
+@app.route("/winner", methods=["GET", "POST"])
 # @login_required
 def winner():
-    return render_template("winner.html")
+    if request.method == "POST":
+        return redirect("/")
+    else:
+        return render_template("winner.html")
 
-@app.route("/loser", methods=["POST"])
+@app.route("/loser", methods=["GET", "POST"])
 # @login_required
 def loser():
-    return render_template("loser.html")
+    if request.method == "POST":
+        return redirect("/")
+    else:
+        return render_template("loser.html")
 
 @app.route("/logout")
 def logout():
