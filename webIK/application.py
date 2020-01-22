@@ -170,12 +170,11 @@ def answer_check():
     # return jsonify(True)
     if session["correct_answer"] == request.form.get('your_answer'):
         db.execute("UPDATE rooms SET place = place + :place WHERE user_id = :user_id", user_id=session["user_id"], place=1)
-        flash("Yes, you gave the correct answer! :)")
-        # return jsonify(True)
+        # flash("Yes, you gave the correct answer! :)")
+        return jsonify(True)
     else:
-        flash("Aww, unfortunately that's not the correct answer :(")
-        # return jsonify(False)
-    return redirect("/board")
+        # flash("Aww, unfortunately that's not the correct answer :(")
+        return jsonify(False)
 
 @app.route("/board")
 # @login_required
