@@ -194,8 +194,6 @@ def board():
 
     roomnumber = int(playerdata[0]["roomnumber"])
 
-    print("real roomnumber:", roomnumber)
-
     if int(playerdata[0]["turn"]) == 1:
         playerturn = True
     else:
@@ -218,8 +216,6 @@ def roll_dice(roomnumber):
                                 user_id=session["user_id"])
 
     if int(playerdata[0]["turn"]) == 1:
-
-        print("roomnumber:", roomnumber)
 
         dobbelsteen = random.randrange(1,4,1)
 
