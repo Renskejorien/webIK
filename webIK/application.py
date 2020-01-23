@@ -33,7 +33,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-socketio = SocketIO(app, ping_timeout=10)
+# socketio = SocketIO(app, ping_timeout=10)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///spel.db")
