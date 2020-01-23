@@ -18,16 +18,30 @@
                 <button class="choice" id="D">{{ data[4]|safe }}</button>
             </div>
             <div id="timer">
-                <div id="counter">15</div>
+                <div id="counter"></div>
                 <div id="btimeGauge"></div>
                 <div id="timeGauge"></div>
             </div>
-            <div id="progress"></div>
+            <progress value="0" max="15" id="progress"></progess>
         </div>
         <div id="scoreContainer" style="display:contents"></div>
     </div>
 
     <script>
+        var timeleft = 15;
+        var downloadTimer = setInterval(function() {
+        document.getElementById("counter").innerHTML = timeleft;
+        document.getElementById("progress").value = 10 - timeleft;
+        timeleft -= 1;
+            if(timeleft <= 0)
+            {
+                clearInterval(downloadTimer);
+                alert("Time's up!");
+                window.location.replace('/compute_turn/');
+            }
+        }, 1000);
+
+
         $('button').click(function()
         {
             var your_answer = this.id;
@@ -35,13 +49,11 @@
                 if (response == false)
                 {
                     alert("Wrong answer!");
-                    // usleep(2000000);
                     window.location.replace('/compute_turn/');
                 }
                 else
                 {
                     alert("Well done!");
-                    // usleep(2000000);
                     window.location.replace('/compute_turn/');
                 }
 
