@@ -134,7 +134,6 @@ def question():
     # Check if it's your turn
     if db.execute("SELECT turn FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['turn'] == 1:
 
-
         # Get the place for this player from database
         place = int(db.execute("SELECT place FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['place'])
 
@@ -203,37 +202,51 @@ def board():
     boarddata = db.execute("SELECT place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
+    if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
+        risky = True
+    else:
+        risky = False
+
     if playerdata[0]["won"] == True:
         if playerdata[0]["place"] >= 18:
             return render_template("winner.html")
         else:
             return render_template("loser.html")
+
     if int(playerdata[0]["turn"]) == 1:
         playerturn = True
     else:
         playerturn = False
+
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddatajs = json.dumps(boarddata)
-    return render_template("board.html", playerturn=playerturn, boarddatajs=boarddatajs, roomnumber=roomnumber)
+    return render_template("board.html", playerturn=playerturn, boarddatajs=boarddatajs, roomnumber=roomnumber, risky=risky)
 
 @app.route("/roll_dice/<int:roomnumber>", methods=["GET"])
 @login_required
 def roll_dice(roomnumber):
     """Roll dice if it's a players turn"""
-    playerdata = db.execute("SELECT turn FROM rooms WHERE user_id = :user_id",
+    playerdata = db.execute("SELECT turn, place FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
     # The player can only roll dice if it's their turn
     if int(playerdata[0]["turn"]) == 1:
-        # With the dice, the player can throw 1 or 2
-        dice = random.randrange(1,3,1)
-        db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
-                    roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
-        return redirect("/questions")
-    # Deze else kan eruit toch? omdat de speler er topch niet op kan drukken dan
-    else:
-        flash("It's not your turn")
+        if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
+            choice = [-2, 1]
+            # With the dice, the player can throw -2, -1, 0 or 1
+            dice = random.choice(choice)
+            db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
+                        roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
+
+            return redirect("/questions")
+        else:
+            # With the dice, the player can throw 1 or 2
+            dice = random.randrange(1,3,1)
+            db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
+                        roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
+
+            return redirect("/questions")
 
 @app.route("/compute_turn/")
 @login_required
@@ -261,6 +274,7 @@ def compute_turn():
                 l = len(boarddata)
                 db.execute("UPDATE rooms SET turn = :l WHERE username = :username",
                             username=current_player, l=l)
+
         return redirect("/board")
 
     else:
