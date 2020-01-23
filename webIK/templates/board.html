@@ -141,6 +141,11 @@
 
         <div id="pin1" class="pin"></div>
 
+        {% if risky %}
+            <div id="risky" class="risky">
+            <p><br></br><br></br><br></br></p>
+            <p class="p2">Je staat op een risky vakje, risky business! Volgende beurt kan je 1 vooruit gaan, OF 2 ACHTERUIT!</p></div>
+        {% endif %}
 
         {% if not playerturn %}
             <button class="btn btn-primary" type="button">Roll the dice!</button>
