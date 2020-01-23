@@ -19,19 +19,16 @@
             </div>
             <div id="timer">
                 <div id="counter"></div>
-                <div id="btimeGauge"></div>
-                <div id="timeGauge"></div>
             </div>
             <progress value="0" max="15" id="progress"></progess>
         </div>
-        <div id="scoreContainer" style="display:contents"></div>
     </div>
 
     <script>
         var timeleft = 15;
         var downloadTimer = setInterval(function() {
         document.getElementById("counter").innerHTML = timeleft;
-        document.getElementById("progress").value = 10 - timeleft;
+        document.getElementById("progress").value = 15 - timeleft;
         timeleft -= 1;
             if(timeleft <= 0)
             {
