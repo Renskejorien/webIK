@@ -134,6 +134,19 @@ def question():
     # Check if it's your turn
     if db.execute("SELECT turn FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['turn'] == 1:
 
+
+        # Get the place for this player from database
+        place = int(db.execute("SELECT place FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['place'])
+
+        # if place % 4 == 0:
+
+        # elif (place + 1) % 4 == 0:
+
+        # elif (place + 2) % 4 == 0:
+
+        # else:
+
+
         # Get the difficulty for this player from database
         difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
 
