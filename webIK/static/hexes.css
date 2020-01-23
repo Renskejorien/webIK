@@ -156,3 +156,8 @@ div.purple {
 div.blue {
     background-image: url(https://www.beautycolorcode.com/a8effc.png);
 }
+
+table, th, td {
+    border: 1px solid black;
+    margin: 10px 10px 10px 1300px;
+}

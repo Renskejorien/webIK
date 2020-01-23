@@ -188,17 +188,15 @@ def answer_check():
     """Checks if question is answered correctly"""
     if session["correct_answer"] == request.args.get('your_answer'):
         db.execute("UPDATE rooms SET place = place + :place WHERE user_id = :user_id", user_id=session["user_id"], place=1)
-        # flash("Yes, you gave the correct answer! :)")
         return jsonify(True)
     else:
-        # flash("Aww, unfortunately that's not the correct answer :(")
         return jsonify(False)
 
 @app.route("/board")
 @login_required
 def board():
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
-    playerdata = db.execute("SELECT turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
+    playerdata = db.execute("SELECT username, turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
     boarddata = db.execute("SELECT place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
@@ -214,7 +212,7 @@ def board():
         playerturn = False
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddatajs = json.dumps(boarddata)
-    return render_template("board.html", playerturn=playerturn, boarddatajs=boarddatajs, roomnumber=roomnumber)
+    return render_template("board.html", playerturn=playerturn, boarddatajs=boarddatajs, roomnumber=roomnumber, boarddata=boarddata)
 
 @app.route("/roll_dice/<int:roomnumber>", methods=["GET"])
 @login_required
