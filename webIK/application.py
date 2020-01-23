@@ -198,11 +198,16 @@ def answer_check():
 @login_required
 def board():
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
-    playerdata = db.execute("SELECT turn, roomnumber FROM rooms WHERE user_id = :user_id",
+    playerdata = db.execute("SELECT turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
     boarddata = db.execute("SELECT place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
+    if playerdata[0]["won"] == True:
+        if playerdata[0]["place"] >= 18:
+            return render_template("winner.html")
+        else:
+            return render_template("loser.html")
     if int(playerdata[0]["turn"]) == 1:
         playerturn = True
     else:
@@ -240,8 +245,8 @@ def compute_turn():
     if int(playerdata[0]["turn"]) == 1:
         # If a player reaches the finish, the game is over
         if int(playerdata[0]["place"]) >= 18:
-            db.execute("UPDATE rooms SET won = :won WHERE AND roomnumber = :roomnumber",
-                    roomumber=playerdata[0]["roomnumber"], won=True)
+            db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
+                    roomnumber=playerdata[0]["roomnumber"], won=True)
 
         boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
                                         roomnumber=playerdata[0]["roomnumber"])
@@ -260,18 +265,6 @@ def compute_turn():
 
     else:
         return redirect("/")
-
-@app.route("/winner", methods=["GET", "POST"])
-# @login_required
-def winner():
-    """Shows the winner he/she has won"""
-    return render_template("winner.html")
-
-@app.route("/loser", methods=["GET", "POST"])
-# @login_required
-def loser():
-    """Shows the other players they have lost"""
-    return render_template("loser.html")
 
 @app.route("/logout")
 def logout():
