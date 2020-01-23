@@ -14,6 +14,7 @@
             <div action="/answer_check" id="choices">
                 <button class="choice" id="A">{{ data[1]|safe }}</button>
                 <button class="choice" id="B">{{ data[2]|safe }}</button>
+                <p></p>
                 <button class="choice" id="C">{{ data[3]|safe }}</button>
                 <button class="choice" id="D">{{ data[4]|safe }}</button>
             </div>
@@ -53,8 +54,6 @@
                     alert("Well done!");
                     window.location.replace('/compute_turn/');
                 }
-
-
             }
             );
         });
