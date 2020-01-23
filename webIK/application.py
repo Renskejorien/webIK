@@ -240,8 +240,8 @@ def compute_turn():
     if int(playerdata[0]["turn"]) == 1:
         # If a player reaches the finish, the game is over
         if int(playerdata[0]["place"]) >= 18:
-            db.execute("UPDATE rooms SET won = :won WHERE AND user_id = :user_id",
-                    user_id=session["user_id"], won=True)
+            db.execute("UPDATE rooms SET won = :won WHERE AND roomnumber = :roomnumber",
+                    roomumber=playerdata[0]["roomnumber"], won=True)
 
         boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
                                         roomnumber=playerdata[0]["roomnumber"])
@@ -265,19 +265,13 @@ def compute_turn():
 # @login_required
 def winner():
     """Shows the winner he/she has won"""
-    if request.method == "POST":
-        return redirect("/")
-    else:
-        return render_template("winner.html")
+    return render_template("winner.html")
 
 @app.route("/loser", methods=["GET", "POST"])
 # @login_required
 def loser():
     """Shows the other players they have lost"""
-    if request.method == "POST":
-        return redirect("/")
-    else:
-        return render_template("loser.html")
+    return render_template("loser.html")
 
 @app.route("/logout")
 def logout():
