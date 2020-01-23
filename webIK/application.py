@@ -33,6 +33,8 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+socketio = SocketIO(app, ping_timeout=10)
+
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///spel.db")
 
@@ -61,8 +63,8 @@ def newroom():
             roomnumber = random.randint(00000, 99999)
 
         # Get new player in database
-        db.execute("INSERT INTO rooms (roomnumber, username, category, place, turn, turn_fixed) VALUES(:roomnumber, :username, :category, :place, :turn, :turn_fixed)",
-                    username=username, roomnumber=roomnumber, category=category, place=1, turn=1, turn_fixed=1)
+        db.execute("INSERT INTO rooms (roomnumber, username, category, place, turn, turn_fixed, won) VALUES(:roomnumber, :username, :category, :place, :turn, :turn_fixed, :won)",
+                    username=username, roomnumber=roomnumber, category=category, place=1, turn=1, turn_fixed=1, won=False)
 
         # Show roomnumber
         flash("Your roomcode will be {}".format(roomnumber))
@@ -93,8 +95,8 @@ def existingroom():
         result = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber AND username= :username", roomnumber=roomnumber, username=username)
         if not result:
             category = db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)[0]['category']
-            db.execute("INSERT INTO rooms (roomnumber, username, place, turn, category, turn_fixed) VALUES(:roomnumber, :username, :place, :turn, :category, :turn_fixed)",
-                        username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn)
+            db.execute("INSERT INTO rooms (roomnumber, username, place, turn, category, turn_fixed, won) VALUES(:roomnumber, :username, :place, :turn, :category, :turn_fixed, :won)",
+                        username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=False)
         else:
             return apology("This username already exists in this room, use log in")
         return redirect("/board")
@@ -129,10 +131,10 @@ def login():
 @login_required
 def question():
     """Handles a new question"""
-    # check if it's your turn
+    # Check if it's your turn
     if db.execute("SELECT turn FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['turn'] == 1:
 
-        # get the difficulty for this player from database
+        # Get the difficulty for this player from database
         difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
 
         # Get the questions and answer(s) from API
@@ -153,10 +155,8 @@ def question():
         for i in range(2, 6):
             if i < getal:
                 q_a.append(data["results"][0]["incorrect_answers"][i - 2])
-
             elif i > getal:
                 q_a.append(data["results"][0]["incorrect_answers"][i - 3])
-
             else:
                 q_a.append(data["results"][0]["correct_answer"])
                 # Saves right answer (A, B, C or D) in the session
@@ -184,96 +184,74 @@ def answer_check():
 @app.route("/board")
 @login_required
 def board():
-    """Handles a new question"""
-
+    """Handles a new question""" # ik neem aan dat dit een andere comment heeft
     playerdata = db.execute("SELECT turn, roomnumber FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
-
     boarddata = db.execute("SELECT place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
-
-    roomnumber = int(playerdata[0]["roomnumber"])
 
     if int(playerdata[0]["turn"]) == 1:
         playerturn = True
     else:
         playerturn = False
-
+    roomnumber = int(playerdata[0]["roomnumber"])
     boarddatajs = json.dumps(boarddata)
-
-    return render_template("board.html",
-                            playerturn=playerturn,
-                            boarddatajs=boarddatajs,
-                            roomnumber=roomnumber)
+    return render_template("board.html", playerturn=playerturn, boarddatajs=boarddatajs, roomnumber=roomnumber)
 
 @app.route("/roll_dice/<int:roomnumber>", methods=["GET"])
 @login_required
 def roll_dice(roomnumber):
-
-    #roomnumber = request.form.get('roomnumber')
-
+    """Roll dice if it's a players turn"""
     playerdata = db.execute("SELECT turn FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
+    # The player can only roll dice if it's their turn
     if int(playerdata[0]["turn"]) == 1:
-
-        dobbelsteen = random.randrange(1,4,1)
-
-        db.execute("UPDATE rooms SET place = place + :dobbelsteen WHERE roomnumber = :roomnumber AND user_id = :user_id",
-                    roomnumber=roomnumber,
-                    user_id=session["user_id"],
-                    dobbelsteen=dobbelsteen)
+        # With the dice, the player can throw 1 or 2
+        dice = random.randrange(1,3,1)
+        db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
+                    roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
         return redirect("/questions")
-
+    # Deze else kan eruit toch? omdat de speler er topch niet op kan drukken dan
     else:
-
         flash("It's not your turn")
 
 @app.route("/compute_turn/")
 @login_required
 def compute_turn():
-
-    print("hij compute de turn")
-
+    """Set new turn for each player"""
     playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
-
+    # Can only compute turn if it's the players turn
     if int(playerdata[0]["turn"]) == 1:
-
+        # If a player reaches the finish, the game is over
         if int(playerdata[0]["place"]) >= 18:
-
             redirect("/winner")
 
         boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
                                         roomnumber=playerdata[0]["roomnumber"])
 
+        # Set the new turn for each player
         current_player = playerdata[0]["username"]
-
         for otherplayer in boarddata:
-
             if otherplayer["username"] != current_player:
-
                 db.execute("UPDATE rooms SET turn = turn - 1 WHERE username = :username",
                             username=otherplayer["username"])
-
             else:
-
                 l = len(boarddata)
-
                 db.execute("UPDATE rooms SET turn = :l WHERE username = :username",
                             username=current_player,
                             l=l)
-
         return redirect("/board")
 
     else:
-
         return redirect("/")
 
 @app.route("/winner", methods=["GET", "POST"])
 # @login_required
 def winner():
+    """Shows the winner he/she has won"""
     if request.method == "POST":
         return redirect("/")
     else:
@@ -282,6 +260,7 @@ def winner():
 @app.route("/loser", methods=["GET", "POST"])
 # @login_required
 def loser():
+    """Shows the other players they have lost"""
     if request.method == "POST":
         return redirect("/")
     else:
@@ -293,6 +272,7 @@ def logout():
     session.clear()
     return redirect("/")
 
+# Wat is dit?
 @app.route("/favicon.ico")
 def favicon():
     return "", 404
