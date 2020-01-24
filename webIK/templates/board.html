@@ -177,9 +177,9 @@
         {% endif %}
 
         {% if not playerturn %}
-            <button style="margin-left: 20px" class="btn btn-outline-dark" type="button">Roll the dice!</button>
+            <button style="margin-left: 20px; opacity: 0.5" class="btn btn-outline-dark disabled" type="button">Roll the dice!</button>
         {% else %}
-            <button style="margin-left: 20px" class="btn btn-outline-dark" type="submit" onclick="roll_dice()"><img src="https://thumbs.gfycat.com/ElatedImpartialArmadillo-max-1mb.gif" width="50" height="30">Roll the dice!</button>
+            <button style="margin-left: 20px; width: 320px; height: 200px" class="btn btn-outline-dark" type="submit" onclick="roll_dice()"><img src="https://thumbs.gfycat.com/ElatedImpartialArmadillo-max-1mb.gif" width="200" height="120">Roll the dice!</button>
         {% endif %}
         <br></br>
         <button style="margin-left: 20px; margin-bottom: 20px" class="btn btn-outline-dark" onclick="movestart()">Logout</button>
