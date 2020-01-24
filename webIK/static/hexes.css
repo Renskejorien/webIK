@@ -5,7 +5,7 @@
 }
 
 .p1 {
-    line-height: 130px;
+    line-height: 170px;
     font-size: large;
 }
 
@@ -145,11 +145,11 @@
     opacity: 0%;
 }
 
-.hexrow:nth-child(1) > div:nth-child(4) {
+.hexrow:nth-child(1) > div:nth-child(2) {
     opacity: 0%;
 }
 
-.hexrow:nth-child(3) > div:nth-child(1) {
+.hexrow:nth-child(1) > div:nth-child(4) {
     opacity: 0%;
 }
 
