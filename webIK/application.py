@@ -138,20 +138,21 @@ def question():
         # Get the place for this player from database
         place = int(db.execute("SELECT place FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['place'])
 
-        # if place % 4 == 0:
-
-        # elif (place + 1) % 4 == 0:
-
-        # elif (place + 2) % 4 == 0:
-
-        # else:
-
+        # Pick the category that
+        if place % 4 == 0:
+            category = '17' #  science & nature
+        elif (place + 1) % 4 == 0:
+            category = '21' # sports
+        elif (place + 2) % 4 == 0:
+            category = '22' # geography
+        else:
+            category = '23' # history
 
         # Get the difficulty for this player from database
         difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
 
         # Get the questions and answer(s) from API
-        URL = str('https://opentdb.com/api.php?amount=1&difficulty=' + difficulty + '&type=multiple')
+        URL = str('https://opentdb.com/api.php?amount=1&category=' + category + '&difficulty=' + difficulty + '&type=multiple')
         data = requests.get(URL).json()
 
         # Choose the place for the right answer
