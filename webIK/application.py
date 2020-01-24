@@ -10,6 +10,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
+# from flask_socketio import SocketIO
 
 from helpers import login_required, apology
 
@@ -197,7 +198,7 @@ def board():
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
     playerdata = db.execute("SELECT username, turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
-    boarddata = db.execute("SELECT place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
+    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
     if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:

@@ -9,21 +9,46 @@
           crossorigin="anonymous"></script>
         <link href="/static/hexes.css" rel="stylesheet">
         <link href="/static/players.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
     </head>
 
     <body onload="init()">
-        <table>
+        <table style="border-spacing: 30px">
             <tr>
-                <th>
-                    Player
-                </th>
+                <th>Player</th>
+                <th>Player</th>
             </tr>
             {% for player in boarddata %}
                 <tr>
-                    <td><div id="player1" class="circleBase player1"></div></td>
-                    <td> {{ player["username"] }} </td>
+                    <td><div id='player1' class="circleBase player1"></div>Hoi</td>
+                    <td style="width:30%">    </td>
+                    {% if not playerturn %}
+                        <td> {{ player["username"] }} </td>
+                    {% else %}
+                        <td style="font-weight: bold">{{ player["username"] }}</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
+            <tr>
+                <td style="background: #a8effc"></td>
+                <td>    </td>
+                <td> Blue </td>
+            </tr>
+            <tr>
+                <td style="background: #ffa4bc"></td>
+                <td>    </td>
+                <td> Pink </td>
+            </tr>
+            <tr>
+                <td style="background: #a4ffe7"></td>
+                <td>    </td>
+                <td> Green </td>
+            </tr>
+            <tr>
+                <td style="background: #dab9ea"></td>
+                <td>    </td>
+                <td> Purple </td>
+            </tr>
         </table>
         <div class="hexrow">
             <div id="1" class="blue">
@@ -148,12 +173,12 @@
         {% endif %}
 
         {% if not playerturn %}
-            <button class="btn btn-primary" type="button">Roll the dice!</button>
+            <button style="margin-left: 20px"class="btn btn-outline-dark" type="button">Roll the dice!</button>
         {% else %}
-            <button class="btn btn-primary" type="submit" onclick="roll_dice()"><img src="https://thumbs.gfycat.com/ElatedImpartialArmadillo-max-1mb.gif" width="50" height="30">Roll the dice!</button>
+            <button style="margin-left: 20px" class="btn btn-outline-dark" type="submit" onclick="roll_dice()"><img src="https://thumbs.gfycat.com/ElatedImpartialArmadillo-max-1mb.gif" width="50" height="30">Roll the dice!</button>
         {% endif %}
         <br></br>
-        <button onclick="movestart()">Logout</button>
+        <button style="margin-left: 20px; margin-bottom: 20px" class="btn btn-outline-dark" onclick="movestart()">Logout</button>
 
         <div id="player1" class="circleBase player1"></div>
         <div id="player2" class="circleBase player2"></div>
