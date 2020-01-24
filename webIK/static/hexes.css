@@ -9,9 +9,15 @@
     font-size: large;
 }
 
+/*.p0.2 {*/
+/*    color: white;*/
+/*}*/
+
 .p0 {
     color: black;
     opacity: 0%;
+    line-height: 130px;
+    font-size: large;
 }
 
 * {
