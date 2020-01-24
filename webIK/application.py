@@ -187,6 +187,7 @@ def question():
 @login_required
 def answer_check():
     """Checks if question is answered correctly"""
+    # if you gave the correct answer, update new place and return true
     if session["correct_answer"] == request.args.get('your_answer'):
         db.execute("UPDATE rooms SET place = place + :place WHERE user_id = :user_id", user_id=session["user_id"], place=1)
         return jsonify(True)
