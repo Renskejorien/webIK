@@ -30,9 +30,7 @@
                     {% if player["turn_fixed"] == 4 %}
                         <td style="background: url(https://image.shutterstock.com/image-vector/geometric-pattern-by-stripes-seamless-260nw-473460193.jpg)"></td>
                     {% endif %}
-                    {% if not playerturn %}
-                        <td> {{ player["username"] }} </td>
-                    {% endif %}
+                    <td> {{ player["username"] }} </td>
                 </tr>
             {% endfor %}
             <tr>
