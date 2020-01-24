@@ -13,35 +13,42 @@
     </head>
 
     <body onload="init()">
-        <table style="border-spacing: 30px; z-index:-1; position: fixed">
-            <tr>
-                <th>Player</th>
-                <th>Player</th>
-            </tr>
+        <table style="position: fixed; width: 15%; border-collapse: separate;">
+            <col width="50">
+            <col width="130">
             {% for player in boarddata %}
                 <tr>
-                    <!--<td><div id='player1' class="circleBase player1"></div>Hoi</td>-->
+                    {% if player["turn_fixed"] == 1 %}
+                        <td style="background-image: url(https://i.pinimg.com/originals/45/eb/f1/45ebf1ee781a0acb5f1ce01b86f44aad.jpg)"></td>
+                    {% endif %}
+                    {% if player["turn_fixed"] == 2 %}
+                        <td style="background: url(https://i.pinimg.com/originals/87/71/2d/87712ddd3c1107e2df5d41e88eb1df90.jpg)"></td>
+                    {% endif %}
+                    {% if player["turn_fixed"] == 3 %}
+                        <td style="background: url(https://naldzgraphics.net/wp-content/uploads/2012/02/30-little-pattern.jpg)"></td>
+                    {% endif %}
+                    {% if player["turn_fixed"] == 4 %}
+                        <td style="background: url(https://image.shutterstock.com/image-vector/geometric-pattern-by-stripes-seamless-260nw-473460193.jpg)"></td>
+                    {% endif %}
                     {% if not playerturn %}
                         <td> {{ player["username"] }} </td>
-                    {% else %}
-                        <td style="font-weight: bold">{{ player["username"] }}</td>
                     {% endif %}
                 </tr>
             {% endfor %}
             <tr>
-                <td style="background: #a8effc"></td>
+                <td class="blue"></td>
                 <td>Science & Nature</td>
             </tr>
             <tr>
-                <td style="background: #ffa4bc"></td>
+                <td class="pink"></td>
                 <td>Sports</td>
             </tr>
             <tr>
-                <td style="background: #a4ffe7"></td>
+                <td class="green"></td>
                 <td>Geography</td>
             </tr>
             <tr>
-                <td style="background: #dab9ea"></td>
+                <td class="purple"></td>
                 <td>History</td>
             </tr>
         </table>
