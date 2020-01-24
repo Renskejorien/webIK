@@ -13,15 +13,14 @@
     </head>
 
     <body onload="init()">
-        <table style="border-spacing: 30px">
+        <table style="border-spacing: 30px; z-index:-1; position: fixed">
             <tr>
                 <th>Player</th>
                 <th>Player</th>
             </tr>
             {% for player in boarddata %}
                 <tr>
-                    <td><div id='player1' class="circleBase player1"></div>Hoi</td>
-                    <td style="width:30%">    </td>
+                    <!--<td><div id='player1' class="circleBase player1"></div>Hoi</td>-->
                     {% if not playerturn %}
                         <td> {{ player["username"] }} </td>
                     {% else %}
@@ -31,23 +30,19 @@
             {% endfor %}
             <tr>
                 <td style="background: #a8effc"></td>
-                <td>    </td>
-                <td> Blue </td>
+                <td>Science & Nature</td>
             </tr>
             <tr>
                 <td style="background: #ffa4bc"></td>
-                <td>    </td>
-                <td> Pink </td>
+                <td>Sports</td>
             </tr>
             <tr>
                 <td style="background: #a4ffe7"></td>
-                <td>    </td>
-                <td> Green </td>
+                <td>Geography</td>
             </tr>
             <tr>
                 <td style="background: #dab9ea"></td>
-                <td>    </td>
-                <td> Purple </td>
+                <td>History</td>
             </tr>
         </table>
         <div class="hexrow">
