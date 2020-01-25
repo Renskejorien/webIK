@@ -140,14 +140,17 @@
 
 .hexrow:nth-child(1) > div:nth-child(2) {
     opacity: 0%;
+    z-index:-20;
 }
 
 .hexrow:nth-child(1) > div:nth-child(2) {
     opacity: 0%;
+    z-index:-20;
 }
 
 .hexrow:nth-child(1) > div:nth-child(4) {
     opacity: 0%;
+    z-index:-20;
 }
 
 .green {

@@ -1,11 +1,11 @@
 .risky {
     position: absolute;
     width: 300px;
-    height: 150px;
+    height: 170px;
     background-image: url(https://jojud265nia2bj9sy4ah9b61-wpengine.netdna-ssl.com/wp-content/uploads/2012/11/MakeMyDay_RiskyBusiness_01-1-1600x900-c-default.jpg);
     z-index: 103;
-    left: 170px;
-    top: 520px;
+    left: 1600px;
+    top: 30px;
     background-size: auto 100%;
 }
 

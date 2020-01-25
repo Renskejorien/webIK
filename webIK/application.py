@@ -10,7 +10,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 
 from helpers import login_required, apology
 
@@ -34,7 +34,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-socketio = SocketIO(app, ping_timeout=10)
+# socketio = SocketIO(app, ping_timeout=10)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///spel.db")
@@ -187,6 +187,10 @@ def question():
 @login_required
 def answer_check():
     """Checks if question is answered correctly"""
+
+    db.execute("UPDATE rooms SET in_bridge = 0 WHERE user_id = :user_id",
+                    user_id=session["user_id"])
+
     # if you gave the correct answer, update new place and return true
     if session["correct_answer"] == request.args.get('your_answer'):
         db.execute("UPDATE rooms SET place = place + :place WHERE user_id = :user_id", user_id=session["user_id"], place=1)
@@ -198,8 +202,12 @@ def answer_check():
 @login_required
 def board():
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
-    playerdata = db.execute("SELECT username, turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
+    playerdata = db.execute("SELECT username, turn, place, roomnumber, won, in_bridge FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
+
+    if playerdata[0]["in_bridge"] == 1:
+        return redirect("/bridge/")
+
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
@@ -221,15 +229,59 @@ def board():
 
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddatajs = json.dumps(boarddata)
-    return render_template("board.html", playerturn=playerturn, boarddatajs=boarddatajs, roomnumber=roomnumber, boarddata=boarddata, risky=risky)
+    return render_template("board.html",
+                            playerturn=playerturn,
+                            boarddatajs=boarddatajs,
+                            roomnumber=roomnumber,
+                            boarddata=boarddata,
+                            risky=risky)
 
-
-@app.route("/roll_dice/<int:roomnumber>", methods=["GET"])
+@app.route("/bridge/")
 @login_required
-def roll_dice(roomnumber):
-    """Roll dice if it's a players turn"""
-    playerdata = db.execute("SELECT turn, place FROM rooms WHERE user_id = :user_id",
+def bridge():
+    """Handles a new question""" # ik neem aan dat dit een andere comment heeft
+
+    playerdata = db.execute("SELECT turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
+
+    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
+                                roomnumber=playerdata[0]["roomnumber"])
+
+    db.execute("UPDATE rooms SET in_bridge = 1 WHERE user_id = :user_id",
+                    user_id=session["user_id"])
+
+    if int(playerdata[0]["place"]) >= 18:
+            db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
+                    roomnumber=playerdata[0]["roomnumber"], won=True)
+
+    if playerdata[0]["won"] == True:
+        if playerdata[0]["place"] >= 18:
+            return render_template("winner.html")
+        else:
+            return render_template("loser.html")
+
+    to_question = True
+
+    roomnumber = int(playerdata[0]["roomnumber"])
+    boarddatajs = json.dumps(boarddata)
+
+    return render_template("board.html",
+                            boarddatajs=boarddatajs,
+                            roomnumber=roomnumber,
+                            boarddata=boarddata,
+                            to_question=to_question)
+
+@app.route("/roll_dice/", methods=["GET"])
+@login_required
+def roll_dice():
+    """Roll dice if it's a players turn"""
+    playerdata = db.execute("SELECT turn, place, roomnumber FROM rooms WHERE user_id = :user_id",
+                                user_id=session["user_id"])
+
+    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
+                                roomnumber=playerdata[0]["roomnumber"])
+
+    roomnumber = int(playerdata[0]["roomnumber"])
 
     # The player can only roll dice if it's their turn
     if int(playerdata[0]["turn"]) == 1:
@@ -241,14 +293,15 @@ def roll_dice(roomnumber):
             db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
-            return redirect("/questions")
+            return redirect("/bridge/")
+
         else:
             # With the dice, the player can throw 1 or 2
             dice = random.randrange(1,3,1)
             db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
-            return redirect("/questions")
+            return redirect("/bridge/")
 
 @app.route("/compute_turn/")
 @login_required
