@@ -10,7 +10,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-# from flask_socketio import SocketIO
+from flask_socketio import SocketIO
 
 from helpers import login_required, apology
 
@@ -34,11 +34,14 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# socketio = SocketIO(app, ping_timeout=10)
+socketio = SocketIO(app, ping_timeout=10)
+
+# sioc = socketio.Client()
+# sios = socketio.Server()
+
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///spel.db")
-
 
 @app.route("/", methods=["GET"])
 def homescreen():
@@ -75,7 +78,7 @@ def newroom():
 
 @app.route("/existingroom", methods=["GET", "POST"])
 def existingroom():
-    """Add player to room"""
+    """Add player to an existing room"""
     if request.method == "POST":
         username = request.form.get("username")
         roomnumber = request.form.get("roomnumber")
@@ -178,7 +181,6 @@ def question():
 
         # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
         return render_template("questions.html", data=q_a)
-
     else:
         return redirect("/board")
 
@@ -201,8 +203,16 @@ def answer_check():
 @app.route("/board")
 @login_required
 def board():
+<<<<<<< HEAD
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
     playerdata = db.execute("SELECT username, turn, place, roomnumber, won, in_bridge FROM rooms WHERE user_id = :user_id",
+||||||| merged common ancestors
+    """Handles a new question""" # ik neem aan dat dit een andere comment heeft
+    playerdata = db.execute("SELECT username, turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
+=======
+    """Shows the board and players"""
+    playerdata = db.execute("SELECT username, turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
+>>>>>>> accea8e57ababc0ecb92f8351b42e825622bfdb0
                                 user_id=session["user_id"])
 
     if playerdata[0]["in_bridge"] == 1:
@@ -211,17 +221,20 @@ def board():
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
+    # Checks if player is on a risky place
     if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
         risky = True
     else:
         risky = False
 
+    # Checks if the game is won
     if playerdata[0]["won"] == True:
         if playerdata[0]["place"] >= 18:
             return render_template("winner.html")
         else:
             return render_template("loser.html")
 
+    # Checks if it's the players turn
     if int(playerdata[0]["turn"]) == 1:
         playerturn = True
     else:
@@ -286,38 +299,53 @@ def roll_dice():
     # The player can only roll dice if it's their turn
     if int(playerdata[0]["turn"]) == 1:
 
+        # With the risky-dice, the player can throw -2, -1, 0 or 1
         if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
             choice = [-2, 1]
-            # With the dice, the player can throw -2, -1, 0 or 1
             dice = random.choice(choice)
             db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
+<<<<<<< HEAD
 
             return redirect("/bridge/")
 
+||||||| merged common ancestors
+
+            return redirect("/questions")
+=======
+            return redirect("/questions")
+
+        # With the dice, the player can throw 1 or 2
+>>>>>>> accea8e57ababc0ecb92f8351b42e825622bfdb0
         else:
-            # With the dice, the player can throw 1 or 2
             dice = random.randrange(1,3,1)
             db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
+<<<<<<< HEAD
 
             return redirect("/bridge/")
+||||||| merged common ancestors
+
+            return redirect("/questions")
+=======
+            return redirect("/questions")
+>>>>>>> accea8e57ababc0ecb92f8351b42e825622bfdb0
 
 @app.route("/compute_turn/")
 @login_required
 def compute_turn():
     """Set new turn for each player"""
     playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
-                                user_id=session["user_id"])
+                            user_id=session["user_id"])
     # Can only compute turn if it's the players turn
     if int(playerdata[0]["turn"]) == 1:
         # If a player reaches the finish, the game is over
         if int(playerdata[0]["place"]) >= 18:
             db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
-                    roomnumber=playerdata[0]["roomnumber"], won=True)
+                        roomnumber=playerdata[0]["roomnumber"], won=True)
 
         boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                        roomnumber=playerdata[0]["roomnumber"])
+                                roomnumber=playerdata[0]["roomnumber"])
 
         # Set the new turn for each player
         current_player = playerdata[0]["username"]
@@ -331,13 +359,12 @@ def compute_turn():
                             username=current_player, l=l)
 
         return redirect("/board")
-
     else:
-        return redirect("/")
+        return redirect("/board")
 
 @app.route("/logout")
 def logout():
-    """log user out"""
+    """Log user out"""
     session.clear()
     return redirect("/")
 
