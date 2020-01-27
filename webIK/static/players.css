@@ -14,11 +14,11 @@
     width: 565px;
     height: 800px;
     background-image: url(https://i.pinimg.com/originals/52/c1/c2/52c1c251a98ba6098d651381e59dbc8a.jpg);
-    z-index: 103;
+    z-index: -50;
     left: 700px;
     top: 100px;
     background-size: auto 100%;
-    opacity: 1;
+    opacity: 0;
 }
 
 .p3 {
@@ -51,13 +51,14 @@
     height: 1px;
     opacity: 0;
     position: absolute;
+    pointer-events: none;
 }
 
 .circleBase {
     border-radius: 50%;
-    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
     position: absolute;
     z-index: 100;
+    pointer-events: none;
 }
 
 .player1 {
@@ -68,6 +69,7 @@
     opacity: 0;
     left: 10px;
     top: 10px;
+    pointer-events: none;
 }
 
 .player2 {
@@ -78,6 +80,7 @@
     opacity: 0;
     left: 10px;
     top: 10px;
+    pointer-events: none;
 }
 
 .player3 {
@@ -88,6 +91,7 @@
     opacity: 0;
     left: 10px;
     top: 10px;
+    pointer-events: none;
 }
 
 .player4 {
@@ -98,4 +102,5 @@
     opacity: 0;
     left: 10px;
     top: 10px;
+    pointer-events: none;
 }

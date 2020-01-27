@@ -224,9 +224,9 @@
 
     <script>
         function init() {
-            if (Number('{{ explanation|safe }}') != -1) {
+            if (Number('{{ explanation|safe }}') == -1) {
                 let explanation = document.getElementById('explanation');
-                disappear();
+                explain();
             }
             var data = '{{ boarddatajs|safe }}';
             data = JSON.parse(data);
