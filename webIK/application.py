@@ -138,7 +138,7 @@ def question():
         # Get the place for this player from database
         place = int(db.execute("SELECT place FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['place'])
 
-        # Pick the category that
+        # Pick the category that matches the players board-position
         if place % 4 == 0:
             category = '17' #  science & nature
         elif (place + 1) % 4 == 0:

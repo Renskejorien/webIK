@@ -25,12 +25,14 @@
     </div>
 
     <script>
-
+        // time left to answer question
         var timeleft = 15;
         var downloadTimer = setInterval(function() {
         document.getElementById("counter").innerHTML = timeleft;
         document.getElementById("progress").value = 15 - timeleft;
         timeleft -= 1;
+
+            // return to board if time's up
             if(timeleft <= 0)
             {
                 clearInterval(downloadTimer);
@@ -39,7 +41,7 @@
             }
         }, 1000);
 
-
+        // check if answer is correct when a button is clicked
         $('button').click(function()
         {
             var your_answer = this.id;
