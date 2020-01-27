@@ -15,29 +15,10 @@ body::after {
   z-index: -21;
 }
 
-
-.p2 {
-    font-size: large;
-    color: white;
-    background: black;
-}
-
-.p1 {
-    line-height: 170px;
-    font-size: large;
-}
-
-.p0 {
-    color: black;
-    opacity: 0%;
-    line-height: 130px;
-    font-size: large;
-}
-
 .boardgame {
     position: relative;
     top: 50px;
-    right: -10%;
+    right: -20%;
 }
 
 

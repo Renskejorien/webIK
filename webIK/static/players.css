@@ -9,6 +9,42 @@
     background-size: auto 100%;
 }
 
+.uitleg {
+    position: absolute;
+    width: 565px;
+    height: 800px;
+    background-image: url(https://i.pinimg.com/originals/52/c1/c2/52c1c251a98ba6098d651381e59dbc8a.jpg);
+    z-index: 103;
+    left: 700px;
+    top: 100px;
+    background-size: auto 100%;
+}
+
+.p3 {
+    font-size: 2em;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: -100px;
+}
+
+.p2 {
+    font-size: large;
+    color: white;
+    background: black;
+}
+
+.p1 {
+    line-height: 170px;
+    font-size: large;
+}
+
+.p0 {
+    color: black;
+    opacity: 0%;
+    line-height: 130px;
+    font-size: large;
+}
+
 .pin {
     width: 1px;
     height: 1px;

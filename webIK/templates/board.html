@@ -175,6 +175,13 @@
             <p class="p2">Je staat op een risky vakje, risky business! Volgende beurt kan je 1 vooruit gaan, OF 2 ACHTERUIT!</p></div>
         {% endif %}
 
+        {% if uitleg == -1 %}
+            <div id="uitleg" class="uitleg">
+            <br></br><br></br><br></br><br></br>
+            <p class="p3"><b>Welkom bij peanuts! Beweeg over het bord door te gooien met de dobbelsteen als je aan de beurt ben en vragen te beantwoorden.
+            Welke vraag je op welk vakje krijgt kan je rechtsbovenin zien. Wie als eerste bij het finish vakje komt wint!</b></p></div>
+        {% endif %}
+
         {% if not playerturn %}
             <button style="margin-left: 20px; opacity: 0.5" class="btn btn-outline-dark disabled" type="button">Roll the dice!</button>
         {% else %}
