@@ -4,8 +4,6 @@
     Question
 {% endblock %}
 
-    <!-- Check this site for understanding -->
-    <!-- https://github.com/CodeExplainedRepo/Multiple-Choice-Quiz-JavaScript -->
 
 {% block main %}
     <div id="container">
@@ -49,13 +47,11 @@
                 if (response == false)
                 {
                     swal("Awww", "Unfortunately, that was not the correct answer!");
-                    uusleep(2000);
                     window.location.replace('/compute_turn/');
                 }
                 else
                 {
                     swal("Well done!", "You gave the correct answer!");
-                    usleep(2000);
                     window.location.replace('/compute_turn/');
                 }
             }
