@@ -17,6 +17,14 @@
 
             <col width="50">
             <col width="130">
+            <thead>
+                <tr>
+                    <th>Legend</th>
+                    <th></th>
+                    <th>Turn</th>
+                </tr>
+            </thead>
+
             {% for player in boarddata %}
                 <tr>
                     {% if player["turn_fixed"] == 1 %}
@@ -32,6 +40,11 @@
                         <td style="background: url(https://image.shutterstock.com/image-vector/geometric-pattern-by-stripes-seamless-260nw-473460193.jpg)"></td>
                     {% endif %}
                     <td> {{ player["username"] }} </td>
+                    {% if player["turn"] == 1 %}
+                    <td> Playing </td>
+                    {% else %}
+                    <td> {{ player["turn"] }} </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             <tr>
@@ -173,6 +186,11 @@
             <div id="risky" class="risky">
             <p><br></br><br></br><br></br></p>
             <p class="p2">Je staat op een risky vakje, risky business! Volgende beurt kan je 1 vooruit gaan, OF 2 ACHTERUIT!</p></div>
+        {% endif %}
+
+        {% if rolled %}
+            <div>
+            <p class="p3">You rolled {{ rolled }}!</p></div>
         {% endif %}
 
         {% if uitleg == -1 %}

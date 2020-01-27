@@ -187,7 +187,7 @@ def question():
 def answer_check():
     """Checks if question is answered correctly"""
 
-    db.execute("UPDATE rooms SET in_bridge = 0 WHERE user_id = :user_id",
+    db.execute("UPDATE rooms SET in_bridge = 0, rolled = 0 WHERE user_id = :user_id",
                     user_id=session["user_id"])
 
     # if you gave the correct answer, update new place and return true
@@ -244,7 +244,7 @@ def board():
 def bridge():
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
 
-    playerdata = db.execute("SELECT turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
+    playerdata = db.execute("SELECT turn, place, roomnumber, won, rolled FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
@@ -267,12 +267,14 @@ def bridge():
 
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddatajs = json.dumps(boarddata)
+    rolled = int(playerdata[0]["rolled"])
 
     return render_template("board.html",
                             boarddatajs=boarddatajs,
                             roomnumber=roomnumber,
                             boarddata=boarddata,
-                            to_question=to_question)
+                            to_question=to_question,
+                            rolled=rolled)
 
 @app.route("/roll_dice/", methods=["GET"])
 @login_required
@@ -297,7 +299,7 @@ def roll_dice():
 
         else:
             dice = random.randrange(1,3,1)
-            db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
+            db.execute("UPDATE rooms SET place = place + :dice, rolled = :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
             return redirect("/bridge/")
