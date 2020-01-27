@@ -9,7 +9,7 @@
     background-size: auto 100%;
 }
 
-.uitleg {
+.explanation {
     position: absolute;
     width: 565px;
     height: 800px;
@@ -18,17 +18,7 @@
     left: 700px;
     top: 100px;
     background-size: auto 100%;
-}
-
-.uitleg {
-    position: absolute;
-    width: 565px;
-    height: 800px;
-    background-image: url(https://i.pinimg.com/originals/52/c1/c2/52c1c251a98ba6098d651381e59dbc8a.jpg);
-    z-index: 103;
-    left: 700px;
-    top: 100px;
-    background-size: auto 100%;
+    opacity: 1;
 }
 
 .p3 {

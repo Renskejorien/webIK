@@ -237,7 +237,7 @@ def board():
                             roomnumber=roomnumber,
                             boarddata=boarddata,
                             risky=risky,
-                            uitleg=int(playerdata[0]["won"]))
+                            explanation=int(playerdata[0]["won"]))
 
 @app.route("/bridge/")
 @login_required
