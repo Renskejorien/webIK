@@ -40,6 +40,13 @@ body::after {
     right: -10%;
 }
 
+
+/*
+credit for hexagon pattern goes to user ScottS on Stackoverflow:
+https://stackoverflow.com/a/10068351
+*/
+
+
 .hexrow {
     white-space: nowrap;
     /*right/left margin set at (( width of child div x sin(30) ) / 2) makes a fairly tight fit; a 3px bottom seems to match*/

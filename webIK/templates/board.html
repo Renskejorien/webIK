@@ -13,8 +13,8 @@
     </head>
 
     <body onload="init()">
+        <table style="position: fixed; width: 15%; border-collapse: separate; border: white; margin-top: 30px; margin-left: 1600px;">
 
-        <table style="position: fixed; width: 15%; border-collapse: separate; border: white; margin-top: 30px; margin-left: 1100px;">
             <col width="50">
             <col width="130">
             {% for player in boarddata %}
@@ -250,10 +250,14 @@
             move('player4', place4, -20, -20);
         }
         function logout(){
-            window.location.replace('/logout');
+            window.location.replace('/logout/');
         }
         function to_question(){
-            window.location.replace('/questions');
+            window.location.replace('/questions/');
+        }
+
+        function reload(){
+            location.reload(forceGet);
         }
     </script>
 
