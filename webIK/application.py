@@ -10,7 +10,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 
 from helpers import login_required, apology
 
@@ -34,7 +34,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-socketio = SocketIO(app, ping_timeout=10)
+# socketio = SocketIO(app, ping_timeout=10)
 
 # sioc = socketio.Client()
 # sios = socketio.Server()
@@ -48,7 +48,7 @@ def homescreen():
     """Shows homescreen"""
     return render_template("homescreen.html")
 
-@app.route("/newroom", methods=["GET", "POST"])
+@app.route("/newroom/", methods=["GET", "POST"])
 def newroom():
     """Makes new room number"""
     if request.method == "POST":
@@ -76,7 +76,7 @@ def newroom():
     else:
         return render_template("newroom.html")
 
-@app.route("/existingroom", methods=["GET", "POST"])
+@app.route("/existingroom/", methods=["GET", "POST"])
 def existingroom():
     """Add player to an existing room"""
     if request.method == "POST":
@@ -103,11 +103,11 @@ def existingroom():
                         username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=False)
         else:
             return apology("This username already exists in this room, use log in")
-        return redirect("/board")
+        return redirect("/board/")
     else:
         return render_template("existingroom.html")
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login/", methods=["GET", "POST"])
 def login():
     """Log player in to show board"""
     if request.method == "POST":
@@ -127,11 +127,11 @@ def login():
         # Set new timestamp and log user in
         session["user_id"] = rows[0]["user_id"]
         db.execute("UPDATE rooms SET date = current_timestamp WHERE user_id = :user_id", user_id=session["user_id"])
-        return redirect("/board")
+        return redirect("/board/")
     else:
         return render_template("login.html")
 
-@app.route("/questions", methods=["GET", "POST"])
+@app.route("/questions/", methods=["GET", "POST"])
 @login_required
 def question():
     """Handles a new question"""
@@ -182,10 +182,10 @@ def question():
         # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
         return render_template("questions.html", data=q_a)
     else:
-        return redirect("/board")
+        return redirect("/board/")
 
 
-@app.route("/answer_check", methods=["GET"])
+@app.route("/answer_check/", methods=["GET"])
 @login_required
 def answer_check():
     """Checks if question is answered correctly"""
@@ -200,7 +200,7 @@ def answer_check():
     else:
         return jsonify(False)
 
-@app.route("/board")
+@app.route("/board/")
 @login_required
 def board():
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
@@ -283,9 +283,6 @@ def roll_dice():
     playerdata = db.execute("SELECT turn, place, roomnumber FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
-    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
-                                roomnumber=playerdata[0]["roomnumber"])
-
     roomnumber = int(playerdata[0]["roomnumber"])
 
     # The player can only roll dice if it's their turn
@@ -334,11 +331,11 @@ def compute_turn():
                 db.execute("UPDATE rooms SET turn = :l WHERE username = :username",
                             username=current_player, l=l)
 
-        return redirect("/board")
+        return redirect("/board/")
     else:
-        return redirect("/board")
+        return redirect("/board/")
 
-@app.route("/logout")
+@app.route("/logout/")
 def logout():
     """Log user out"""
     session.clear()
