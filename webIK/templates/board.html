@@ -284,6 +284,15 @@
         function reload(){
             location.reload(forceGet);
         }
+
+        let uitleg = document.getElementById('uitleg');
+
+        document.onclick = disappear;
+
+        function disappear() {
+            uitleg.style.zIndex = -50;
+            uitleg.style.opacity = "0";
+        }
     </script>
 
 </html>
