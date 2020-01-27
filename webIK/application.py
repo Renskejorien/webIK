@@ -203,16 +203,8 @@ def answer_check():
 @app.route("/board")
 @login_required
 def board():
-<<<<<<< HEAD
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
     playerdata = db.execute("SELECT username, turn, place, roomnumber, won, in_bridge FROM rooms WHERE user_id = :user_id",
-||||||| merged common ancestors
-    """Handles a new question""" # ik neem aan dat dit een andere comment heeft
-    playerdata = db.execute("SELECT username, turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
-=======
-    """Shows the board and players"""
-    playerdata = db.execute("SELECT username, turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
->>>>>>> accea8e57ababc0ecb92f8351b42e825622bfdb0
                                 user_id=session["user_id"])
 
     if playerdata[0]["in_bridge"] == 1:
@@ -305,31 +297,15 @@ def roll_dice():
             dice = random.choice(choice)
             db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
-<<<<<<< HEAD
 
             return redirect("/bridge/")
 
-||||||| merged common ancestors
-
-            return redirect("/questions")
-=======
-            return redirect("/questions")
-
-        # With the dice, the player can throw 1 or 2
->>>>>>> accea8e57ababc0ecb92f8351b42e825622bfdb0
         else:
             dice = random.randrange(1,3,1)
             db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
-<<<<<<< HEAD
 
             return redirect("/bridge/")
-||||||| merged common ancestors
-
-            return redirect("/questions")
-=======
-            return redirect("/questions")
->>>>>>> accea8e57ababc0ecb92f8351b42e825622bfdb0
 
 @app.route("/compute_turn/")
 @login_required
