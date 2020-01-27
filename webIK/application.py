@@ -10,7 +10,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 
 from helpers import login_required, apology
 
@@ -34,7 +34,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-socketio = SocketIO(app, ping_timeout=10)
+# socketio = SocketIO(app, ping_timeout=10)
 
 # sioc = socketio.Client()
 # sios = socketio.Server()
