@@ -98,6 +98,8 @@ def existingroom():
                         username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=-1)
         else:
             return apology("This username already exists in this room, use log in")
+        rows = db.execute("SELECT * FROM rooms WHERE username = :username AND roomnumber= :roomnumber", username=username, roomnumber=roomnumber)
+        session["user_id"] = rows[0]["user_id"]
         return redirect("/board/")
     else:
         return render_template("existingroom.html")
@@ -185,7 +187,7 @@ def question():
 def answer_check():
     """Checks if question is answered correctly"""
 
-    db.execute("UPDATE rooms SET in_bridge = 0 WHERE user_id = :user_id",
+    db.execute("UPDATE rooms SET in_bridge = 0, rolled = 0 WHERE user_id = :user_id",
                     user_id=session["user_id"])
 
     # if you gave the correct answer, update new place and return true
@@ -234,20 +236,21 @@ def board():
                             boarddatajs=boarddatajs,
                             roomnumber=roomnumber,
                             boarddata=boarddata,
-                            risky=risky)
+                            risky=risky,
+                            explanation=int(playerdata[0]["won"]))
 
 @app.route("/bridge/")
 @login_required
 def bridge():
     """Handles a new question""" # ik neem aan dat dit een andere comment heeft
 
-    playerdata = db.execute("SELECT turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
+    playerdata = db.execute("SELECT turn, place, roomnumber, won, rolled FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
 
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
-    db.execute("UPDATE rooms SET in_bridge = 1 WHERE user_id = :user_id",
+    db.execute("UPDATE rooms SET in_bridge = 1, won = 0 WHERE user_id = :user_id",
                     user_id=session["user_id"])
 
     if int(playerdata[0]["place"]) >= 18:
@@ -264,12 +267,14 @@ def bridge():
 
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddatajs = json.dumps(boarddata)
+    rolled = int(playerdata[0]["rolled"])
 
     return render_template("board.html",
                             boarddatajs=boarddatajs,
                             roomnumber=roomnumber,
                             boarddata=boarddata,
-                            to_question=to_question)
+                            to_question=to_question,
+                            rolled=rolled)
 
 @app.route("/roll_dice/", methods=["GET"])
 @login_required
@@ -294,7 +299,7 @@ def roll_dice():
 
         else:
             dice = random.randrange(1,3,1)
-            db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
+            db.execute("UPDATE rooms SET place = place + :dice, rolled = :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
             return redirect("/bridge/")
