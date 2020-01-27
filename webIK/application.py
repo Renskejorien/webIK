@@ -68,7 +68,7 @@ def newroom():
 
         # Get new player in database
         db.execute("INSERT INTO rooms (roomnumber, username, category, place, turn, turn_fixed, won) VALUES(:roomnumber, :username, :category, :place, :turn, :turn_fixed, :won)",
-                    username=username, roomnumber=roomnumber, category=category, place=1, turn=1, turn_fixed=1, won=False)
+                    username=username, roomnumber=roomnumber, category=category, place=1, turn=1, turn_fixed=1, won=-1)
 
         # Show roomnumber
         flash("Your roomcode will be {}".format(roomnumber))
@@ -100,7 +100,7 @@ def existingroom():
         if not result:
             category = db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)[0]['category']
             db.execute("INSERT INTO rooms (roomnumber, username, place, turn, category, turn_fixed, won) VALUES(:roomnumber, :username, :place, :turn, :category, :turn_fixed, :won)",
-                        username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=False)
+                        username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=-1)
         else:
             return apology("This username already exists in this room, use log in")
         return redirect("/board/")
@@ -220,7 +220,7 @@ def board():
         risky = False
 
     # Checks if the game is won
-    if playerdata[0]["won"] == True:
+    if playerdata[0]["won"] == 1:
         if playerdata[0]["place"] >= 18:
             return render_template("winner.html")
         else:
@@ -257,9 +257,9 @@ def bridge():
 
     if int(playerdata[0]["place"]) >= 18:
             db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
-                    roomnumber=playerdata[0]["roomnumber"], won=True)
+                    roomnumber=playerdata[0]["roomnumber"], won=1)
 
-    if playerdata[0]["won"] == True:
+    if playerdata[0]["won"] == 1:
         if playerdata[0]["place"] >= 18:
             return render_template("winner.html")
         else:
@@ -315,7 +315,7 @@ def compute_turn():
         # If a player reaches the finish, the game is over
         if int(playerdata[0]["place"]) >= 18:
             db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
-                        roomnumber=playerdata[0]["roomnumber"], won=True)
+                        roomnumber=playerdata[0]["roomnumber"], won=1)
 
         boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
                                 roomnumber=playerdata[0]["roomnumber"])
