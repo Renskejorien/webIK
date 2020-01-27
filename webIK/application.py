@@ -43,7 +43,7 @@ def homescreen():
     """Shows homescreen"""
     return render_template("homescreen.html")
 
-@app.route("/newroom", methods=["GET", "POST"])
+@app.route("/newroom/", methods=["GET", "POST"])
 def newroom():
     """Makes new room number"""
     if request.method == "POST":
@@ -71,7 +71,7 @@ def newroom():
     else:
         return render_template("newroom.html")
 
-@app.route("/existingroom", methods=["GET", "POST"])
+@app.route("/existingroom/", methods=["GET", "POST"])
 def existingroom():
     """Add player to an existing room"""
     if request.method == "POST":
@@ -98,11 +98,11 @@ def existingroom():
                         username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=False)
         else:
             return apology("This username already exists in this room, use log in")
-        return redirect("/board")
+        return redirect("/board/")
     else:
         return render_template("existingroom.html")
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login/", methods=["GET", "POST"])
 def login():
     """Log player in to show board"""
     if request.method == "POST":
@@ -122,11 +122,11 @@ def login():
         # Set new timestamp and log user in
         session["user_id"] = rows[0]["user_id"]
         db.execute("UPDATE rooms SET date = current_timestamp WHERE user_id = :user_id", user_id=session["user_id"])
-        return redirect("/board")
+        return redirect("/board/")
     else:
         return render_template("login.html")
 
-@app.route("/questions", methods=["GET", "POST"])
+@app.route("/questions/", methods=["GET", "POST"])
 @login_required
 def question():
     """Handles a new question"""
@@ -177,13 +177,17 @@ def question():
         # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
         return render_template("questions.html", data=q_a)
     else:
-        return redirect("/board")
+        return redirect("/board/")
 
 
-@app.route("/answer_check", methods=["GET"])
+@app.route("/answer_check/", methods=["GET"])
 @login_required
 def answer_check():
     """Checks if question is answered correctly"""
+
+    db.execute("UPDATE rooms SET in_bridge = 0 WHERE user_id = :user_id",
+                    user_id=session["user_id"])
+
     # if you gave the correct answer, update new place and return true
     if session["correct_answer"] == request.args.get('your_answer'):
         db.execute("UPDATE rooms SET place = place + :place WHERE user_id = :user_id", user_id=session["user_id"], place=1)
@@ -191,12 +195,16 @@ def answer_check():
     else:
         return jsonify(False)
 
-@app.route("/board")
+@app.route("/board/")
 @login_required
 def board():
-    """Shows the board and players"""
-    playerdata = db.execute("SELECT username, turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
+    """Handles a new question""" # ik neem aan dat dit een andere comment heeft
+    playerdata = db.execute("SELECT username, turn, place, roomnumber, won, in_bridge FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
+
+    if playerdata[0]["in_bridge"] == 1:
+        return redirect("/bridge/")
+
     boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
                                 roomnumber=playerdata[0]["roomnumber"])
 
@@ -221,15 +229,56 @@ def board():
 
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddatajs = json.dumps(boarddata)
-    return render_template("board.html", playerturn=playerturn, boarddatajs=boarddatajs, roomnumber=roomnumber, boarddata=boarddata, risky=risky)
+    return render_template("board.html",
+                            playerturn=playerturn,
+                            boarddatajs=boarddatajs,
+                            roomnumber=roomnumber,
+                            boarddata=boarddata,
+                            risky=risky)
 
-
-@app.route("/roll_dice/<int:roomnumber>", methods=["GET"])
+@app.route("/bridge/")
 @login_required
-def roll_dice(roomnumber):
-    """Roll dice if it's a players turn"""
-    playerdata = db.execute("SELECT turn, place FROM rooms WHERE user_id = :user_id",
+def bridge():
+    """Handles a new question""" # ik neem aan dat dit een andere comment heeft
+
+    playerdata = db.execute("SELECT turn, place, roomnumber, won FROM rooms WHERE user_id = :user_id",
                                 user_id=session["user_id"])
+
+    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
+                                roomnumber=playerdata[0]["roomnumber"])
+
+    db.execute("UPDATE rooms SET in_bridge = 1 WHERE user_id = :user_id",
+                    user_id=session["user_id"])
+
+    if int(playerdata[0]["place"]) >= 18:
+            db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
+                    roomnumber=playerdata[0]["roomnumber"], won=True)
+
+    if playerdata[0]["won"] == True:
+        if playerdata[0]["place"] >= 18:
+            return render_template("winner.html")
+        else:
+            return render_template("loser.html")
+
+    to_question = True
+
+    roomnumber = int(playerdata[0]["roomnumber"])
+    boarddatajs = json.dumps(boarddata)
+
+    return render_template("board.html",
+                            boarddatajs=boarddatajs,
+                            roomnumber=roomnumber,
+                            boarddata=boarddata,
+                            to_question=to_question)
+
+@app.route("/roll_dice/", methods=["GET"])
+@login_required
+def roll_dice():
+    """Roll dice if it's a players turn"""
+    playerdata = db.execute("SELECT turn, place, roomnumber FROM rooms WHERE user_id = :user_id",
+                                user_id=session["user_id"])
+
+    roomnumber = int(playerdata[0]["roomnumber"])
 
     # The player can only roll dice if it's their turn
     if int(playerdata[0]["turn"]) == 1:
@@ -240,14 +289,15 @@ def roll_dice(roomnumber):
             dice = random.choice(choice)
             db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
-            return redirect("/questions")
 
-        # With the dice, the player can throw 1 or 2
+            return redirect("/bridge/")
+
         else:
             dice = random.randrange(1,3,1)
             db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
-            return redirect("/questions")
+
+            return redirect("/bridge/")
 
 @app.route("/compute_turn/")
 @login_required
@@ -276,11 +326,11 @@ def compute_turn():
                 db.execute("UPDATE rooms SET turn = :l WHERE username = :username",
                             username=current_player, l=l)
 
-        return redirect("/board")
+        return redirect("/board/")
     else:
-        return redirect("/board")
+        return redirect("/board/")
 
-@app.route("/logout")
+@app.route("/logout/")
 def logout():
     """Log user out"""
     session.clear()

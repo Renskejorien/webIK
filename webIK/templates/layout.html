@@ -32,15 +32,15 @@
             <div class="collapse navbar-collapse" id="navbar" style="color: black">
                 {% if not session.user_id %}
                     <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/board">View Board</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/questions">View Questions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/board/">View Board</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/questions/">View Questions</a></li>
                     </ul>
                 {% else %}
                     <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout/">Log Out</a></li>
                         <!-- die hieronder verwijderen-->
-                        <li class="nav-item"><a class="nav-link" href="/questions">View Questions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/board">View Board</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/questions/">View Questions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/board/">View Board</a></li>
                     </ul>
                 {% endif %}
             </div>

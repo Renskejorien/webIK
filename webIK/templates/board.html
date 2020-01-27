@@ -13,7 +13,7 @@
     </head>
 
     <body onload="init()">
-        <table style="position: fixed; width: 15%; border-collapse: separate; border: white; margin-top: 30px; margin-left: 1100px;">
+        <table style="position: fixed; width: 15%; border-collapse: separate; border: white; margin-top: 30px; margin-left: 1600px;">
             <col width="50">
             <col width="130">
             {% for player in boarddata %}
@@ -35,7 +35,7 @@
             {% endfor %}
             <tr>
                 <td class="blue"></td>
-                <td>Science & Nature</td>
+                <td>History</td>
             </tr>
             <tr>
                 <td class="pink"></td>
@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <td class="purple"></td>
-                <td>History</td>
+                <td>Science & Nature</td>
             </tr>
         </table>
         <div class="boardgame">
@@ -179,8 +179,14 @@
         {% else %}
             <button style="margin-left: 20px; width: 320px; height: 200px" class="btn btn-outline-dark" type="submit" onclick="roll_dice()"><img src="https://thumbs.gfycat.com/ElatedImpartialArmadillo-max-1mb.gif" width="200" height="120">Roll the dice!</button>
         {% endif %}
+
         <br></br>
-        <button style="margin-left: 20px; margin-bottom: 20px" class="btn btn-outline-dark" onclick="movestart()">Logout</button>
+        <button style="margin-left: 20px; margin-bottom: 20px" class="btn btn-outline-dark" onclick="logout()">Logout</button>
+        <br></br>
+
+        {% if to_question %}
+            <button style="margin-left: 400px; margin-bottom: 20px; width: 500px; height: 130px" class="btn btn-outline-dark" onclick="to_question()">Take question</button>
+        {% endif %}
 
         <div id="player1" class="circleBase player1"></div>
         <div id="player2" class="circleBase player2"></div>
@@ -217,9 +223,7 @@
         }
 
         function roll_dice() {
-            var roomnumber = Number('{{ roomnumber }}');
-
-            window.location.replace('/roll_dice/' + roomnumber);
+            window.location.replace('/roll_dice/');
         }
 
         function move(player, place, xoffset, yoffset){
@@ -244,8 +248,11 @@
         function move4(place4){
             move('player4', place4, -20, -20);
         }
-        function movestart(){
-            window.location.replace('/logout');
+        function logout(){
+            window.location.replace('/logout/');
+        }
+        function to_question(){
+            window.location.replace('/questions/');
         }
 
         function reload(){
