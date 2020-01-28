@@ -10,7 +10,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-# from flask_socketio import SocketIO
+from flask_socketio import SocketIO
 from helpers import login_required, apology
 
 # Configure application
@@ -33,7 +33,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# socketio = SocketIO(app)
+socketio = SocketIO(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///spel.db")
@@ -337,7 +337,7 @@ def update():
                                 roomnumber=playerdata[0]["roomnumber"])
 
     for player in boarddata[0]:
-        socketio.emit("update", room=player)
+        socketio.emit("update", player=player)
 
 socketio.run(app, debug=True)
 
