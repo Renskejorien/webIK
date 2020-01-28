@@ -183,9 +183,6 @@ def question():
 def answer_check():
     """Checks if question is answered correctly"""
 
-    db.execute("UPDATE rooms SET in_bridge = 0, rolled = 0 WHERE user_id = :user_id",
-                    user_id=session["user_id"])
-
     # if you gave the correct answer, update new place and return true
     if session["correct_answer"] == request.args.get('your_answer'):
         db.execute("UPDATE rooms SET place = place + :place WHERE user_id = :user_id", user_id=session["user_id"], place=1)
@@ -295,6 +292,10 @@ def compute_turn():
     """Set new turn for each player"""
     playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
                             user_id=session["user_id"])
+
+    db.execute("UPDATE rooms SET in_bridge = 0, rolled = 0 WHERE user_id = :user_id",
+                    user_id=session["user_id"])
+
     # Can only compute turn if it's the players turn
     if int(playerdata[0]["turn"]) == 1:
         # If a player reaches the finish, the game is over
