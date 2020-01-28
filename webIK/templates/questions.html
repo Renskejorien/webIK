@@ -48,11 +48,13 @@
             $.get('/answer_check/', {your_answer: your_answer}, function(response) {
                 if (response == false)
                 {
+                    clearInterval(downloadTimer);
                     swal("Awww", "Unfortunately, that was not the correct answer!");
                     window.location.replace('/compute_turn/');
                 }
                 else
                 {
+                    clearInterval(downloadTimer);
                     swal("Well done!", "You gave the correct answer!");
                     window.location.replace('/compute_turn/');
                 }

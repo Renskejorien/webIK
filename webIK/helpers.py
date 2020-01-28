@@ -1,6 +1,7 @@
 import requests
 import urllib.parse
 import os
+
 from cs50 import SQL
 from flask import redirect, render_template, request, session
 from functools import wraps
