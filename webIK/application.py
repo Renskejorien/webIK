@@ -54,8 +54,7 @@ def newroom():
 
         # Create a new roomnumber
         roomnumber = random.randint(00000, 99999)
-        exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
-        while exists:
+        while db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber):
             roomnumber = random.randint(00000, 99999)
 
         # Get new player in database
