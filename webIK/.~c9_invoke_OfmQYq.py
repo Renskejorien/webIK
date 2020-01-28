@@ -307,7 +307,7 @@ def compute_turn():
 
     playerdata = player_data(session["user_id"])
     roomnumber = int(playerdata[0]["roomnumber"])
-
+    
     # Can only compute turn if it's the players turn
     if int(playerdata[0]["turn"]) == 1:
         # If a player reaches the finish, the game is over
