@@ -10,7 +10,6 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_socketio import SocketIO
 from helpers import login_required, apology
 
 # Configure application
@@ -33,7 +32,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-socketio = SocketIO(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///spel.db")
@@ -281,7 +279,7 @@ def roll_dice():
         if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
             choice = [-2, 1]
             dice = random.choice(choice)
-            db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
+            db.execute("UPDATE rooms SET place = place + :dice, rolled = :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
             return redirect("/bridge/")
@@ -323,27 +321,6 @@ def compute_turn():
         return redirect("/board/")
     else:
         return redirect("/board/")
-
-@socketio.on("join")
-def join():
-    playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
-                            user_id=session["user_id"])
-    boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                roomnumber=playerdata[0]["roomnumber"])
-    player = request.sid
-    join_game(player)
-
-@socketio.on("update")
-def update():
-    playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
-                            user_id=session["user_id"])
-    boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                roomnumber=playerdata[0]["roomnumber"])
-    bridge()
-    for player in boarddata[0]:
-        socketio.emit("update", player=player)
-
-socketio.run(app, debug=True)
 
 @app.route("/logout/")
 def logout():
