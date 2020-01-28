@@ -154,7 +154,7 @@ def question():
         data = requests.get(URL).json()
 
         # Choose the place for the right answer
-        getal = random.randrange(2, 6)
+        answer_place = random.randrange(2, 6)
 
         # Create list with the question[0], and 4 possible answers in random order
         q_a = []
@@ -165,9 +165,9 @@ def question():
 
         # Makes a list with 3 wrong answers and a good answer in a random order
         for i in range(2, 6):
-            if i < getal:
+            if i < answer_place:
                 q_a.append(data["results"][0]["incorrect_answers"][i - 2])
-            elif i > getal:
+            elif i > answer_place:
                 q_a.append(data["results"][0]["incorrect_answers"][i - 3])
             else:
                 q_a.append(data["results"][0]["correct_answer"])
