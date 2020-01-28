@@ -1,31 +1,39 @@
-.p2 {
-    font-size: large;
-    color: white;
-    background: black;
+body {
+  z-index: 0;
+  max-width: 900px;
 }
 
-.p1 {
-    line-height: 170px;
-    font-size: large;
-}
-
-.p0 {
-    color: black;
-    opacity: 0%;
-    line-height: 130px;
-    font-size: large;
+body::after {
+  background: url("https://image.freepik.com/vrije-vector/naadloos-banaanpatroon-op-lichtgele-achtergrond_1319-566.jpg");
+  content: "";
+  opacity: 0.3;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: -21;
 }
 
 .boardgame {
     position: relative;
     top: 50px;
-    right: -10%;
+    right: -20%;
+    pointer-events: none;
 }
+
+
+/*
+credit for hexagon pattern goes to user ScottS on Stackoverflow:
+https://stackoverflow.com/a/10068351
+*/
+
 
 .hexrow {
     white-space: nowrap;
     /*right/left margin set at (( width of child div x sin(30) ) / 2) makes a fairly tight fit; a 3px bottom seems to match*/
     margin: 0 25px 3px;
+    pointer-events: none;
 }
 
 .hexrow > div {
@@ -33,21 +41,22 @@
     height: 173.2px;
     margin: 0 25px;
     position: relative;
-    background-position: -50px 0; /* -left position -1 x width x sin(30) */
+    background-position: -50px 0;
     background-repeat: no-repeat;
     background-size: auto 120%;
     color: #000000;
     text-align: center;
     display: inline-block;
-    line-height: 173.2px; /*equals height*/
+    line-height: 173.2px;
+    pointer-events: none;
 }
 
 .hexrow > div:nth-child(odd) {
-    top: 43.3px; /* ( width x cos(30) / 2 ) */
+    top: 43.3px;
 }
 
 .hexrow > div:nth-child(even) {
-    top: -44.8px; /* -1 x( ( width x cos(30) / 2) + (hexrow bottom margin / 2)) */
+    top: -44.8px;
 }
 
 .hexrow > div > div:first-of-type {
@@ -59,6 +68,7 @@
     z-index: -1;
     overflow: hidden;
     background-image: inherit;
+    pointer-events: none;
 
     -ms-transform:rotate(60deg); /* IE 9 */
     -moz-transform:rotate(60deg); /* Firefox */
@@ -70,7 +80,7 @@
 .hexrow > div > div:first-of-type:before {
     content: '';
     position: absolute;
-    width: 200px; /* width of main + margin sizing */
+    width: 200px;
     height: 100%;
     background-image: inherit;
     background-position: 0 0;
@@ -79,6 +89,7 @@
     bottom: 0;
     left: 0;
     z-index: 1;
+    pointer-events: none;
 
     -ms-transform:rotate(-60deg) translate(-150px, 0); /* IE 9 */
     -moz-transform:rotate(-60deg) translate(-150px, 0); /* Firefox */
@@ -103,6 +114,7 @@
     z-index: -2;
     overflow: hidden;
     background-image: inherit;
+    pointer-events: none;
 
     -ms-transform:rotate(-60deg); /* IE 9 */
     -moz-transform:rotate(-60deg); /* Firefox */
@@ -114,7 +126,7 @@
 .hexrow > div > div:last-of-type:before {
     content: '';
     position: absolute;
-    width: 200px; /* starting width + margin sizing */
+    width: 200px;
     height: 100%;
     background-image: inherit;
     background-position: 0 0;
@@ -123,8 +135,8 @@
     bottom: 0;
     left: 0;
     z-index: 1;
+    pointer-events: none;
 
-    /*translate properties are initial width (100px) and half height (173.2 / 2 = 86.6) */
     -ms-transform:rotate(60deg) translate(100px, 86.6px); /* IE 9 */
     -moz-transform:rotate(60deg) translate(100px, 86.6px); /* Firefox */
     -webkit-transform:rotate(60deg) translate(100px, 86.6px); /* Safari and Chrome */

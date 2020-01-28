@@ -4,11 +4,10 @@
     Question
 {% endblock %}
 
-    <!-- Check this site for understanding -->
-    <!-- https://github.com/CodeExplainedRepo/Multiple-Choice-Quiz-JavaScript -->
 
 {% block main %}
     <div id="container">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <div id="quiz" style="display:contents">
             <subtitle id="question">{{ data[0]|safe }}</subtitle>
             <div action="/answer_check/" id="choices">
@@ -26,32 +25,35 @@
     </div>
 
     <script>
+        // time left to answer question
         var timeleft = 15;
         var downloadTimer = setInterval(function() {
         document.getElementById("counter").innerHTML = timeleft;
         document.getElementById("progress").value = 15 - timeleft;
         timeleft -= 1;
+
+            // return to board if time's up
             if(timeleft <= 0)
             {
                 clearInterval(downloadTimer);
-                alert("Time's up!");
+                swal("Time's up!", "Try not to doubt this long next time!");
                 window.location.replace('/compute_turn/');
             }
         }, 1000);
 
-
+        // check if answer is correct when a button is clicked
         $('button').click(function()
         {
             var your_answer = this.id;
             $.get('/answer_check/', {your_answer: your_answer}, function(response) {
                 if (response == false)
                 {
-                    alert("Wrong answer!");
+                    swal("Awww", "Unfortunately, that was not the correct answer!");
                     window.location.replace('/compute_turn/');
                 }
                 else
                 {
-                    alert("Well done!");
+                    swal("Well done!", "You gave the correct answer!");
                     window.location.replace('/compute_turn/');
                 }
             }

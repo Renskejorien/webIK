@@ -13,9 +13,20 @@
     </head>
 
     <body onload="init()">
+        <button style="margin-left: 20px; margin-top: 20px; position: absolute" class="btn btn-outline-dark" onclick="explain()">Explanation</button>
+
         <table style="position: fixed; width: 15%; border-collapse: separate; border: white; margin-top: 30px; margin-left: 1600px;">
+
             <col width="50">
             <col width="130">
+            <thead>
+                <tr>
+                    <th>Legend</th>
+                    <th></th>
+                    <th>Turn</th>
+                </tr>
+            </thead>
+
             {% for player in boarddata %}
                 <tr>
                     {% if player["turn_fixed"] == 1 %}
@@ -31,6 +42,11 @@
                         <td style="background: url(https://image.shutterstock.com/image-vector/geometric-pattern-by-stripes-seamless-260nw-473460193.jpg)"></td>
                     {% endif %}
                     <td> {{ player["username"] }} </td>
+                    {% if player["turn"] == 1 %}
+                    <td> Playing </td>
+                    {% else %}
+                    <td> {{ player["turn"] }} </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             <tr>
@@ -73,7 +89,7 @@
                     <div></div>
                 </div>
                 <div id="12" class="purple">
-                    <p class="p1">12, RISKY</p>
+                    <p class="p1">12, <b>RISKY</b></p>
                     <div></div>
                     <div></div>
                 </div>
@@ -129,7 +145,7 @@
                     <div></div>
                 </div>
                 <div id="5" class="blue">
-                    <p class="p1">5, RISKY</p>
+                    <p class="p1">5, <b>RISKY</b></p>
                     <div></div>
                     <div></div>
                 </div>
@@ -174,6 +190,16 @@
             <p class="p2">Je staat op een risky vakje, risky business! Volgende beurt kan je 1 vooruit gaan, OF 2 ACHTERUIT!</p></div>
         {% endif %}
 
+        {% if rolled %}
+            <div>
+            <p class="p3">You rolled {{ rolled }}!</p></div>
+        {% endif %}
+
+            <div id="explanation" class="explanation">
+            <br></br><br></br><br></br><br></br>
+            <p class="p3"><b>Welkom bij peanuts! Beweeg over het bord door te gooien met de dobbelsteen als je aan de beurt ben en vragen te beantwoorden.
+            Welke vraag je op welk vakje krijgt kan je rechtsbovenin zien. Wie als eerste bij het finish vakje komt wint!</b></p></div>
+
         {% if not playerturn %}
             <button style="margin-left: 20px; opacity: 0.5" class="btn btn-outline-dark disabled" type="button">Roll the dice!</button>
         {% else %}
@@ -188,6 +214,8 @@
             <button style="margin-left: 400px; margin-bottom: 20px; width: 500px; height: 130px" class="btn btn-outline-dark" onclick="to_question()">Take question</button>
         {% endif %}
 
+
+
         <div id="player1" class="circleBase player1"></div>
         <div id="player2" class="circleBase player2"></div>
         <div id="player3" class="circleBase player3"></div>
@@ -196,6 +224,10 @@
 
     <script>
         function init() {
+            if (Number('{{ explanation|safe }}') == -1) {
+                let explanation = document.getElementById('explanation');
+                explain();
+            }
             var data = '{{ boarddatajs|safe }}';
             data = JSON.parse(data);
             var maxlength = data.length - 1;
@@ -266,9 +298,25 @@
             });
         }
 
+<<<<<<< HEAD
         document.addEventListener('DOMContentLoaded', function(event) {
             main();
         })
+=======
+        let explanation = document.getElementById('explanation');
+
+        document.onclick = disappear;
+
+        function disappear() {
+            explanation.style.zIndex = -50;
+            explanation.style.opacity = "0";
+        }
+
+        function explain() {
+            setTimeout(() => {  explanation.style.zIndex = 103;}, 100);
+            setTimeout(() => {  explanation.style.opacity = "1";}, 100);
+        }
+>>>>>>> 54a30fdf546de322aff8ba083e029ceda683b851
     </script>
 
 </html>
