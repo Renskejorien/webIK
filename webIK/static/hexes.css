@@ -4,9 +4,9 @@ body {
 }
 
 body::after {
-  background: url("https://image.freepik.com/vrije-vector/naadloos-banaanpatroon-op-lichtgele-achtergrond_1319-566.jpg");
+  background: url("https://365psd.com/images/istock/previews/9018/90186653-peanuts-pattern.jpg");
   content: "";
-  opacity: 0.3;
+  opacity: 0.05;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -24,7 +24,7 @@ body::after {
 
 
 /*
-credit for hexagon pattern goes to user ScottS on Stackoverflow:
+credit for hexagon pattern below goes to user ScottS on Stackoverflow:
 https://stackoverflow.com/a/10068351
 */
 

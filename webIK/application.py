@@ -32,7 +32,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///spel.db")
 
@@ -55,8 +54,7 @@ def newroom():
 
         # Create a new roomnumber
         roomnumber = random.randint(00000, 99999)
-        exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
-        while exists:
+        while db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber):
             roomnumber = random.randint(00000, 99999)
 
         # Get new player in database
