@@ -255,9 +255,20 @@
             window.location.replace('/questions/');
         }
 
-        function reload(){
-            location.reload(forceGet);
+        function main() {
+            let socket = io();
+
+            socket.emit("join");
+
+            socket.on("moved", data => {
+                console.log(data);
+                init();
+            });
         }
+
+        document.addEventListener('DOMContentLoaded', function(event) {
+            main();
+        })
     </script>
 
 </html>
