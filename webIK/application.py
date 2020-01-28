@@ -10,7 +10,8 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import login_required, apology
+from helpers import login_required, apology, add_player, delete_player, player_data, board_data
+from datetime import datetime, timedelta
 
 # Configure application
 app = Flask(__name__)
@@ -57,10 +58,16 @@ def newroom():
         exists = db.execute("SELECT roomnumber FROM rooms WHERE roomnumber = :roomnumber ", roomnumber=roomnumber)
         while exists:
             roomnumber = random.randint(00000, 99999)
+        turn = 1
+        turn_fixed = turn
+        place = 1
+        won = -1
+        date = datetime.timestamp(datetime.now())
+        rolled = 0
+
 
         # Get new player in database
-        db.execute("INSERT INTO rooms (roomnumber, username, category, place, turn, turn_fixed, won) VALUES(:roomnumber, :username, :category, :place, :turn, :turn_fixed, :won)",
-                    username=username, roomnumber=roomnumber, category=category, place=1, turn=1, turn_fixed=1, won=-1)
+        add_player(username, roomnumber, place, turn, category, turn_fixed, won, date, rolled)
 
         # Show roomnumber
         flash("Your roomcode will be {}".format(roomnumber))
@@ -88,11 +95,16 @@ def existingroom():
             return apology("This room already contains the maximum of 4 players")
 
         turn = len(in_room) + 1
+        turn_fixed = turn
+        place = 1
+        won = -1
+        date = datetime.timestamp(datetime.now())
+        rolled = 0
+
         result = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber AND username= :username", roomnumber=roomnumber, username=username)
         if not result:
             category = db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)[0]['category']
-            db.execute("INSERT INTO rooms (roomnumber, username, place, turn, category, turn_fixed, won) VALUES(:roomnumber, :username, :place, :turn, :category, :turn_fixed, :won)",
-                        username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=-1)
+            add_player(username, roomnumber, place, turn, category, turn_fixed, won, date, rolled)
         else:
             return apology("This username already exists in this room, use log in")
         rows = db.execute("SELECT * FROM rooms WHERE username = :username AND roomnumber= :roomnumber", username=username, roomnumber=roomnumber)
@@ -120,7 +132,8 @@ def login():
 
         # Set new timestamp and log user in
         session["user_id"] = rows[0]["user_id"]
-        db.execute("UPDATE rooms SET date = current_timestamp WHERE user_id = :user_id", user_id=session["user_id"])
+        date = datetime.timestamp(datetime.now())
+        db.execute("UPDATE rooms SET date = :date WHERE user_id = :user_id", user_id=session["user_id"], date=date)
         return redirect("/board/")
     else:
         return render_template("login.html")
@@ -198,14 +211,17 @@ def answer_check():
 @login_required
 def board():
     """Shows the board and the location of the players"""
-    playerdata = db.execute("SELECT username, turn, place, roomnumber, won, in_bridge FROM rooms WHERE user_id = :user_id",
-                                user_id=session["user_id"])
+    playerdata = player_data(session["user_id"])
+    roomnumber = int(playerdata[0]["roomnumber"])
+    boarddata = board_data(roomnumber)
 
     if playerdata[0]["in_bridge"] == 1:
         return redirect("/bridge/")
 
-    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
-                                roomnumber=playerdata[0]["roomnumber"])
+    # If a player takes longer than one day to complete their turn, delete player
+    for player in boarddata:
+        if player["date"] <= datetime.timestamp(datetime.now() - timedelta(days=1)):
+            delete_player(player, playerdata)
 
     # Checks if player is on a risky place
     if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
@@ -213,8 +229,9 @@ def board():
     else:
         risky = False
 
-    # Checks if the game is won
+    # Checks if the game is won and delete players
     if playerdata[0]["won"] == 1:
+        delete_player(player, playerdata)
         if playerdata[0]["place"] >= 18:
             return render_template("winner.html")
         else:
@@ -236,11 +253,9 @@ def board():
 def bridge():
     """If it's a players turn, they can press the button to see the question"""
 
-    playerdata = db.execute("SELECT turn, place, roomnumber, won, rolled FROM rooms WHERE user_id = :user_id",
-                                user_id=session["user_id"])
-
-    boarddata = db.execute("SELECT username, place, turn, turn_fixed FROM rooms WHERE roomnumber = :roomnumber GROUP BY turn_fixed",
-                                roomnumber=playerdata[0]["roomnumber"])
+    playerdata = player_data(session["user_id"])
+    roomnumber = int(playerdata[0]["roomnumber"])
+    boarddata = board_data(roomnumber)
 
     db.execute("UPDATE rooms SET in_bridge = 1, won = 0 WHERE user_id = :user_id",
                     user_id=session["user_id"])
@@ -266,9 +281,7 @@ def bridge():
 @login_required
 def roll_dice():
     """Roll dice if it's a players turn"""
-    playerdata = db.execute("SELECT turn, place, roomnumber FROM rooms WHERE user_id = :user_id",
-                                user_id=session["user_id"])
-
+    playerdata = player_data(session["user_id"])
     roomnumber = int(playerdata[0]["roomnumber"])
 
     # The player can only roll dice if it's their turn
@@ -294,17 +307,17 @@ def roll_dice():
 @login_required
 def compute_turn():
     """Set new turn for each player"""
-    playerdata = db.execute("SELECT roomnumber, username, place, turn FROM rooms WHERE user_id = :user_id",
-                            user_id=session["user_id"])
+    playerdata = player_data(session["user_id"])
+    roomnumber = int(playerdata[0]["roomnumber"])
+
     # Can only compute turn if it's the players turn
     if int(playerdata[0]["turn"]) == 1:
         # If a player reaches the finish, the game is over
         if int(playerdata[0]["place"]) >= 18:
             db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
-                        roomnumber=playerdata[0]["roomnumber"], won=1)
+                        roomnumber=roomnumber, won=1)
 
-        boarddata = db.execute("SELECT username, place, turn FROM rooms WHERE roomnumber = :roomnumber GROUP BY username",
-                                roomnumber=playerdata[0]["roomnumber"])
+        boarddata = board_data(roomnumber)
 
         # Set the new turn for each player
         current_player = playerdata[0]["username"]
@@ -316,10 +329,7 @@ def compute_turn():
                 l = len(boarddata)
                 db.execute("UPDATE rooms SET turn = :l WHERE username = :username",
                             username=current_player, l=l)
-
-        return redirect("/board/")
-    else:
-        return redirect("/board/")
+    return redirect("/board/")
 
 @app.route("/logout/")
 def logout():
