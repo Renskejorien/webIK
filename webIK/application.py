@@ -286,7 +286,7 @@ def roll_dice():
         if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
             choice = [-2, 1]
             dice = random.choice(choice)
-            db.execute("UPDATE rooms SET place = place + :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
+            db.execute("UPDATE rooms SET place = place + :dice, rolled = :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
             return redirect("/bridge/")
