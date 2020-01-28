@@ -15,7 +15,7 @@
     <body onload="init()">
         <button style="margin-left: 20px; margin-top: 20px; position: absolute" class="btn btn-outline-dark" onclick="explain()">Explanation</button>
 
-        <table style="position: fixed; width: 15%; border-collapse: separate; border: white; margin-top: 30px; margin-left: 1600px;">
+        <table style="position: fixed; width: 15%; border-collapse: separate; border: white; margin-top: 30px; margin-left: 1200px;">
 
             <col width="50">
             <col width="130">
@@ -197,8 +197,7 @@
 
             <div id="explanation" class="explanation">
             <br></br><br></br><br></br><br></br>
-            <p class="p3"><b>Welkom bij peanuts! Beweeg over het bord door te gooien met de dobbelsteen als je aan de beurt ben en vragen te beantwoorden.
-            Welke vraag je op welk vakje krijgt kan je rechtsbovenin zien. Wie als eerste bij het finish vakje komt wint!</b></p></div>
+            <p class="p3"><b>Welcame to PEANUTS! Move by rolling the dice. You'll have to try to answer correctly. You camn </b></p></div>
 
         {% if not playerturn %}
             <button style="margin-left: 20px; opacity: 0.5" class="btn btn-outline-dark disabled" type="button">Roll the dice!</button>
@@ -285,20 +284,16 @@
             window.location.replace('/questions/');
         }
 
-        function main() {
-            let socket = io();
-
-            socket.emit("join");
-
-            socket.on("moved", data => {
-                console.log(data);
-                init();
-            });
+        function loadDoc() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("demo").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "ajax_info.txt", true);
+            xhttp.send();
         }
-
-        document.addEventListener('DOMContentLoaded', function(event) {
-            main();
-        })
 
         let explanation = document.getElementById('explanation');
 

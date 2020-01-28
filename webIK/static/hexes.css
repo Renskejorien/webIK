@@ -7,7 +7,7 @@ body::after {
   background: url("https://image.freepik.com/vrije-vector/naadloos-banaanpatroon-op-lichtgele-achtergrond_1319-566.jpg");
   content: "";
   opacity: 0.3;
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   right: 0;
