@@ -64,7 +64,6 @@ def newroom():
         date = datetime.timestamp(datetime.now())
         rolled = 0
 
-
         # Get new player in database
         add_player(username, roomnumber, place, turn, category, turn_fixed, won, date, rolled)
 
