@@ -44,7 +44,7 @@ def delete_player(player, playerdata):
                         username=player["username"], roomnumber=playerdata[0]["roomnumber"])
 
 def player_data(user_id):
-    return db.execute("SELECT username, turn, place, roomnumber, won, in_bridge, rolled FROM rooms WHERE user_id = :user_id",
+    return db.execute("SELECT username, date, turn, place, roomnumber, won, in_bridge, rolled FROM rooms WHERE user_id = :user_id",
                             user_id=session["user_id"])
 
 def board_data(roomnumber):
