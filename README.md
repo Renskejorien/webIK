@@ -1,7 +1,8 @@
-# Projectvoorstel PEANUTS
+# PEANUTS
+De studenten die aan dit project hebben meegewerkt zijn Renske de Leeuw, Thomas Koene en Wouter Knibbe.
 
 ## Samenvatting
-Onze webapplicatie PEANUTS zal een combinatie zijn tussen trivia en een bordspel. Je kan je samen met je vrienden/familie opgeven binnen hetzelfde team, zodat je tegen elkaar kan spelen. Met behulp van een dobbelsteen zet je stapjes vooruit waarna je uit verschillende categorieën een vraag kan krijgen. Door de vraag goed en binnen de tijd te beantwoorden scoor je extra punten waardoor je verder vooruit kan.De vragen zullen voor alle deelnemers op niveau zijn, om verschillen in leeftijd op te vangen. Door dit spel kunnen de spelers een competitief spel spelen en zorgt dit voor vermaak. Laat het spel beginnen!
+Onze webapplicatie PEANUTS zal een combinatie zijn tussen trivia en een bordspel. Je kan je samen met je vrienden/familie opgeven binnen hetzelfde team met een zelfgekozen moeilijkheidsgraad, zodat je tegen elkaar kan spelen. Met behulp van een dobbelsteen zet je stapjes vooruit waarna je uit verschillende categorieën een vraag kan krijgen. Door de vraag goed en binnen de tijd te beantwoorden scoor je extra punten waardoor je verder vooruit kan. Door dit spel kunnen de spelers een competitief spel spelen en zorgt dit voor vermaak. Laat het spel beginnen!
 
 ## Features
 Grote, noodzakelijke features:
@@ -24,7 +25,7 @@ Kleine features:
 ## Afhankelijkheden
 - <http://jservice.io> is een mogelijke API die te gebruiken is als bron voor de vragen in het spel.
 - <https://www.funnygames.nl/spel/trivia.html>
-- Bootstrap voor het gebruiken van de navbar
+- Bootstrap voor het gebruiken van de navbar en buttons
 - ... voor de hexagons op het spelbord
 - ... voor het weergeven van de vragen
 
