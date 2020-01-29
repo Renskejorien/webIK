@@ -224,13 +224,11 @@ def board():
     else:
         risky = False
 
-    # Checks if the game is won and delete players
+    # Checks if the game is won
     if playerdata[0]["won"] == 1:
         if playerdata[0]["place"] >= 18:
-            delete_player(player, playerdata)
             return render_template("winner.html")
         else:
-            delete_player(player, playerdata)
             return render_template("loser.html")
 
     # Checks if it's the players turn
