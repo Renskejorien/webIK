@@ -214,9 +214,9 @@ def board():
         return redirect("/bridge/")
 
     # If a player takes longer than one day to complete their turn, delete player
-    # for player in boarddata:
-    #     if player["date"] <= datetime.timestamp(datetime.now() - timedelta(days=1)):
-    #         delete_player(player, playerdata)
+    for player in boarddata:
+        if player["date"] <= datetime.timestamp(datetime.now() - timedelta(days=1)):
+            delete_player(player, playerdata)
 
     # Checks if player is on a risky place
     if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
@@ -226,10 +226,11 @@ def board():
 
     # Checks if the game is won and delete players
     if playerdata[0]["won"] == 1:
-        delete_player(player, playerdata)
         if playerdata[0]["place"] >= 18:
+            delete_player(player, playerdata)
             return render_template("winner.html")
         else:
+            delete_player(player, playerdata)
             return render_template("loser.html")
 
     # Checks if it's the players turn
