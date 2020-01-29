@@ -40,7 +40,7 @@ def apology(message, code=400):
 # Define a function that adds a player to a specific room
 def add_player(username, roomnumber, turn, category, turn_fixed, date, rolled):
     return db.execute("INSERT INTO rooms (roomnumber, username, place, turn, category, turn_fixed, won, date, rolled) VALUES(:roomnumber, :username, :place, :turn, :category, :turn_fixed, :won, :date, :rolled)",
-                username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=-1, date=date, rolled=rolled)
+                username=username, roomnumber=roomnumber, place=1, turn=turn, category=category, turn_fixed=turn, won=0, date=date, rolled=rolled)
 
 # Define a function that deletes a player from a specific room
 def delete_player(player, playerdata):
