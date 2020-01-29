@@ -187,7 +187,7 @@
 
         {% if risky %}
             <div id="risky" class="risky">
-            <p><br></br><br></br><br></br></p>
+            <p><br></br><br></br><br></br><br></br></p>
             <p class="p2"> You're on a risky box, risky business! Next turn, you can move forward one box or two boxes backwards..</p></div>
         {% endif %}
 
@@ -198,7 +198,7 @@
 
             <div id="explanation" class="explanation">
             <br></br><br></br><br></br><br></br>
-            <p class="p3"><b>Welcame to PEANUTS! Move by rolling the dice. You'll have to try to answer correctly. Than you can move forward one box on the game board. If you're the first one to make it to the finish, you'll win the game. </b></p></div>
+            <p class="p3"><b>Welcome to PEANUTS! Move by rolling the dice. You'll have to try to answer correctly. Than you can move forward one box on the game board. If you're the first one to make it to the finish, you'll win the game. </b></p></div>
 
         {% if not playerturn %}
             <button style="margin-left: 20px; opacity: 0.5" class="btn btn-outline-dark disabled" type="button">Roll the dice!</button>
@@ -221,33 +221,44 @@
     </body>
 
     <script>
+        // put all divs in place as soon as the page is loaded
         function init()
         {
+            // collects and formats data from database
             var data = '{{ boarddatajs|safe }}';
             data = JSON.parse(data);
+            // ensures the for-loop does not overextend
             var maxlength = data.length - 1;
+            // moves all players to the correct place according to the database
             for (i in data)
             {
+                // when the database holds at lest one player, maxlength is 0
+                // therefor, for the page to load correctly, maxlength should always be over -1
+                // calls function that moves player 1
                 if (maxlength > -1 && i == 0)
                 {
                 var place1 = data[i]["place"];
                 move1(place1);
                 }
+                // calls function that moves player 2
                 if (i == 1)
                 {
                     var place2 = data[i]["place"];
                     move2(place2);
                 }
+                // calls function that moves player 3
                 if (i == 2)
                 {
                     var place3 = data[i]["place"];
                     move3(place3);
                 }
+                // calls function that moves player 4
                 if (i == 3)
                 {
                     var place4 = data[i]["place"];
                     move4(place4);
                 }
+                // break if all players in the database have been moved
                 if (maxlength == i)
                 {
                     break;
@@ -255,64 +266,74 @@
             }
         }
 
+        // redirects to /roll_dice/
         function roll_dice()
         {
             window.location.replace('/roll_dice/');
         }
 
+        // moves a player to a position, including optional offset
         function move(player, place, xoffset, yoffset)
         {
+            // a pin is set on one of the hexes that make up the board
             var pin = document.getElementById(place);
+            // the coordinates of that pin are extracted
             var coor = pin.getBoundingClientRect();
+            // the player is moved to the given coordinates + optional offset
             var d = document.getElementById(player);
             d.style.left = coor.left + xoffset + "px";
             d.style.top = coor.top + 30 + yoffset + "px";
+            // ensures the player is visible
             d.style.zIndex = 100;
             d.style.opacity = "1";
         }
 
+        // move player 1
         function move1(place1)
         {
             move('player1', place1, 20, 20);
         }
+        // move player 2
         function move2(place2)
         {
             move('player2', place2, 20, -20);
         }
+        // move player 3
         function move3(place3)
         {
             move('player3', place3, -20, 20);
         }
+        // move player 4
         function move4(place4)
         {
             move('player4', place4, -20, -20);
         }
-
+        // redirects to /logout/
         function logout()
         {
             window.location.replace('/logout/');
         }
-
+        // redirects to /questions/
         function to_question()
         {
             window.location.replace('/questions/');
         }
-
+        // refreshes the board every 5 seconds
         setTimeout(function()
         {
             window.location.reload(1);
         }, 5000);
 
+        // makes the explanation disappear when the user clicks anywhere
         let explanation = document.getElementById('explanation');
-
         document.onclick = disappear;
-
+        // actually makes the explanation disappear
         function disappear()
         {
             explanation.style.zIndex = -50;
             explanation.style.opacity = "0";
         }
-
+        // shows the explanation
         function explain()
         {
             setTimeout(() => {  explanation.style.zIndex = 103;}, 100);
