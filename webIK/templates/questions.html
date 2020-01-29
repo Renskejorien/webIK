@@ -49,7 +49,11 @@
                 if (response == false)
                 {
                     clearInterval(downloadTimer);
-                    swal("Awww", "Unfortunately, that was not the correct answer!");
+                    swal({
+                        title: "Awww",
+                        text: "Unfortunately, that was not the correct answer!",
+                        icon: "success",
+                        });
                     window.location.replace('/compute_turn/');
                 }
                 else
