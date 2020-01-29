@@ -11,16 +11,13 @@
         <link href="/static/players.css" rel="stylesheet">
         <link href="/static/styles.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
-
         <title>"PEANUTS": Board</title>
         <link rel="icon" href="https://spng.subpng.com/20181203/ai/kisspng-reeses-peanut-butter-cups-vector-graphics-stock-i-5c05e22c2e6ec9.6335560115438894521902.jpg" type = "image/x-icon">
-
     </head>
 
     <body onload="init()">
         <button style="margin-left: 20px; margin-top: 20px; position: absolute" class="btn btn-outline-dark" onclick="explain()">Explanation</button>
         <table style="position: fixed; width: 15%; border-collapse: separate; border: white; margin-top: 30px; margin-left: 80%;">
-
             <col width="50">
             <col width="130">
             <thead>
@@ -224,38 +221,47 @@
     </body>
 
     <script>
-        function init() {
+        function init()
+        {
             var data = '{{ boarddatajs|safe }}';
             data = JSON.parse(data);
             var maxlength = data.length - 1;
-            for (i in data) {
-                if (maxlength > -1 && i == 0) {
+            for (i in data)
+            {
+                if (maxlength > -1 && i == 0)
+                {
                 var place1 = data[i]["place"];
                 move1(place1);
                 }
-                if (i == 1) {
+                if (i == 1)
+                {
                     var place2 = data[i]["place"];
                     move2(place2);
                 }
-                if (i == 2) {
+                if (i == 2)
+                {
                     var place3 = data[i]["place"];
                     move3(place3);
                 }
-                if (i == 3) {
+                if (i == 3)
+                {
                     var place4 = data[i]["place"];
                     move4(place4);
                 }
-                if (maxlength == i) {
+                if (maxlength == i)
+                {
                     break;
                 }
             }
         }
 
-        function roll_dice() {
+        function roll_dice()
+        {
             window.location.replace('/roll_dice/');
         }
 
-        function move(player, place, xoffset, yoffset){
+        function move(player, place, xoffset, yoffset)
+        {
             var pin = document.getElementById(place);
             var coor = pin.getBoundingClientRect();
             var d = document.getElementById(player);
@@ -265,42 +271,52 @@
             d.style.opacity = "1";
         }
 
-        function move1(place1){
+        function move1(place1)
+        {
             move('player1', place1, 20, 20);
         }
-        function move2(place2){
+        function move2(place2)
+        {
             move('player2', place2, 20, -20);
         }
-        function move3(place3){
+        function move3(place3)
+        {
             move('player3', place3, -20, 20);
         }
-        function move4(place4){
+        function move4(place4)
+        {
             move('player4', place4, -20, -20);
         }
-        function logout(){
+
+        function logout()
+        {
             window.location.replace('/logout/');
         }
-        function to_question(){
+
+        function to_question()
+        {
             window.location.replace('/questions/');
         }
 
-        setTimeout(function(){
-           window.location.reload(1);
+        setTimeout(function()
+        {
+            window.location.reload(1);
         }, 5000);
 
         let explanation = document.getElementById('explanation');
 
         document.onclick = disappear;
 
-        function disappear() {
+        function disappear()
+        {
             explanation.style.zIndex = -50;
             explanation.style.opacity = "0";
         }
 
-        function explain() {
+        function explain()
+        {
             setTimeout(() => {  explanation.style.zIndex = 103;}, 100);
             setTimeout(() => {  explanation.style.opacity = "1";}, 100);
         }
     </script>
-
 </html>
