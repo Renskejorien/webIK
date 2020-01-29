@@ -1,7 +1,5 @@
 
-nav .navbar-brand
-{
-    /* size for brand */
+nav .navbar-brand {
     font-size: xx-large;
 }
 
@@ -18,37 +16,26 @@ nav .navbar-brand
     border: 2px solid white;
 }
 
-main .form-control
-{
-    /* center form controls */
+main .form-control {
     display: inline-block;
-
-    /* override Bootstrap's 100% width for form controls */
     width: auto;
 }
 
-main
-{
-    /* scroll horizontally as needed */
+main {
     overflow-x: auto;
-
-    /* center contents */
     text-align: center;
 }
 
-main img
-{
-    /* constrain images on small screens */
+main img {
     max-width: 100%;
 }
 
-body{
+body {
     font-size: 20px;
     font-family: monospace;
 }
 
-/* noem het niet container */
-#container{
+#container {
     margin : 20px auto;
     background-color: white;
     height: 400px;
@@ -58,7 +45,7 @@ body{
     position: relative;
 }
 
-#question{
+#question {
     width:500px;
     height : 125px;
     position: absolute;
@@ -71,43 +58,43 @@ body{
     font-size: 1.25em;
 }
 
-#choices{
+#choices {
     width : 480px;
     position: absolute;
     right : 0;
     top : 125px;
 }
-.choice{
+.choice {
     display: inline-block;
     width : 220px;
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
 }
-.choice:hover{
+.choice:hover {
     border : 2px solid grey;
     font-weight: bold;
 }
 
-#timer{
+#timer {
     position: absolute;
     height : 100px;
     width : 200px;
     bottom : 0px;
     text-align: center;
 }
-#counter{
+#counter {
     font-size: 4em;
 }
 
-#progress{
+#progress {
     width : 500px;
     position: absolute;
     bottom : 10px;
     right : 10px;
     text-align: right;
 }
-.prog{
+.prog {
     width : 25px;
     height : 25px;
     display: inline-block;
