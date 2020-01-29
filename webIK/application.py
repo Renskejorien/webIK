@@ -9,7 +9,6 @@ from flask import Flask, flash, jsonify, redirect, render_template, request, ses
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import login_required, apology, add_player, delete_player, player_data, board_data
 from datetime import datetime, timedelta
 
@@ -59,8 +58,6 @@ def newroom():
             roomnumber = random.randint(00000, 99999)
         turn = 1
         turn_fixed = turn
-        place = 1
-        won = -1
         date = datetime.timestamp(datetime.now())
         rolled = 0
 
@@ -93,15 +90,13 @@ def existingroom():
 
         turn = len(in_room) + 1
         turn_fixed = turn
-        place = 1
-        won = -1
         date = datetime.timestamp(datetime.now())
         rolled = 0
 
         result = db.execute("SELECT username FROM rooms WHERE roomnumber = :roomnumber AND username= :username", roomnumber=roomnumber, username=username)
         if not result:
             category = db.execute("SELECT category FROM rooms WHERE roomnumber = :roomnumber", roomnumber=roomnumber)[0]['category']
-            add_player(username, roomnumber, place, turn, category, turn_fixed, won, date, rolled)
+            add_player(username, roomnumber, turn, category, turn_fixed, date, rolled)
         else:
             return apology("This username already exists in this room, use log in")
         rows = db.execute("SELECT * FROM rooms WHERE username = :username AND roomnumber= :roomnumber", username=username, roomnumber=roomnumber)
@@ -138,10 +133,10 @@ def login():
 def question():
     """Handles a new question"""
     # Check if it's your turn
-    if db.execute("SELECT turn FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['turn'] == 1:
+    if player_data(session["user_id"])[0]['turn'] == 1:
 
         # Get the place for this player from database
-        place = int(db.execute("SELECT place FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['place'])
+        place = int(player_data(session["user_id"])[0]['place'])
 
         # Pick the category that matches the players board-position
         if place % 4 == 0:
@@ -154,7 +149,7 @@ def question():
             category = '23' # history
 
         # Get the difficulty for this player from database
-        difficulty = str(db.execute("SELECT category FROM rooms WHERE user_id= :user_id", user_id=session["user_id"])[0]['category'])
+        difficulty = str(player_data(session["user_id"])[0]['category'])
 
         # Get the questions and answer(s) from API
         URL = str('https://opentdb.com/api.php?amount=1&category=' + category + '&difficulty=' + difficulty + '&type=multiple')
@@ -205,6 +200,7 @@ def board():
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddata = board_data(roomnumber)
 
+    # Check if the is supposed to be in the bridge
     if playerdata[0]["in_bridge"] == 1:
         return redirect("/bridge/")
 
@@ -239,8 +235,7 @@ def board():
 @app.route("/bridge/")
 @login_required
 def bridge():
-    """If it's a players turn, they can press the button to see the question"""
-
+    """After a player rolls dice, they can press the button to see the question"""
     playerdata = player_data(session["user_id"])
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddata = board_data(roomnumber)
@@ -248,10 +243,12 @@ def bridge():
     db.execute("UPDATE rooms SET in_bridge = 1, won = 0 WHERE user_id = :user_id",
                     user_id=session["user_id"])
 
+    # If a player reaches the finish, set won
     if int(playerdata[0]["place"]) >= 18:
             db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
                     roomnumber=playerdata[0]["roomnumber"], won=1)
 
+    # Checks if the game is won and by who
     if playerdata[0]["won"] == 1:
         if playerdata[0]["place"] >= 18:
             return render_template("winner.html")
