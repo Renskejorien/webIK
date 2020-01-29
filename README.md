@@ -29,7 +29,7 @@ Kleine features:
 - ... voor het weergeven van de vragen
 
 Moeilijkheden die wij verder in het project waarschijnlijk tegen gaan komen zijn:
-- Zorgen dat de spelers over het bord kunnen bewegen 
+- Zorgen dat de spelers over het bord kunnen bewegen
 - Zorgen dat de spelers in dezelfde room komen te zitten
 - Bij elk vakje op het bord een vraag uit de juiste category krijgen
 
@@ -48,3 +48,15 @@ Voorkomt dat gebruikers pagina’s zullen bezoeken waar ze niet het juiste pad v
 
 Apology:
 Efficiënte manier om de gebruiker een indicatie te geven wat er moet gebeuren als er iets fout gaat.
+
+Add_player:
+Deze functie voegt een speler toe aan de database als deze een nieuwe room maakt of zich aansluit bij een bestaande room.
+
+Delete_player:
+Deze functie verwijdert een speler uit een spel als deze speler niet binnen 1 dag zijn beurt volbrengt of het spel is gewonnen door een speler.
+
+Player_data:
+Verzamelt de data van de speler die is ingelogd.
+
+Board_data:
+Verzameld de data van alle spelers die in dezelfde room zitten als de speler die is ingelogd.
