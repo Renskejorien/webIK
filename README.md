@@ -19,8 +19,10 @@ Onze webapplicatie PEANUTS zal een combinatie zijn tussen trivia en een bordspel
 
 # Samenwerking
 Wouter: heeft het grootste deel aan het bord bijgedragen. Hij heeft ervoor gezorgd dat het bord er staat, dat er een dobbelsteen kan worden gegooid en dat de spelers over het bord kunnen bewegen.
+
 Thomas: heeft ervoor gezorgd dat alle vragen op het scherm verschijnen wanneer een speler op een vakje komt. Daarnaast kunnen spelers aangeven welk antwoord ze kiezen en wordt er laten zien of het goede antwoord wordt gegeven.
-Renske: heeft ervoor gezorgd dat alle spelers zich kunnen registreren en identificeren. Daarnaast heeft Renske het grootste deel van de layout gedaan en ervoor gezorgd dat de site automatisch refresht.
+
+Renske: heeft ervoor gezorgd dat alle spelers zich kunnen registreren en identificeren. Daarnaast heeft Renske het grootste deel van de layout gedaan en ervoor gezorgd dat de site automatisch refresht. Ook is zijn door Renske helpers functies toegevoegd om o.a. de data uit de database op te vragen. 
 
 ## Afhankelijkheden
 - <https://opentdb.com/> is een mogelijke API die te gebruiken is als bron voor de vragen in het spel.
@@ -48,6 +50,8 @@ De helpers functies waar wij gebruik van gaan maken zijn
 - Login_required: Voorkomt dat gebruikers pagina’s zullen bezoeken waar ze niet het juiste pad voor hebben afgelegd.
 - Apology: Efficiënte manier om de gebruiker een indicatie te geven wat er moet gebeuren als er iets fout gaat.
 - Add_player: Deze functie voegt een speler toe aan de database als deze een nieuwe room maakt of zich aansluit bij een bestaande room.
-- Delete_player: Deze functie verwijdert een speler uit een spel als deze speler niet binnen 1 dag zijn beurt volbrengt of het spel is gewonnen door een speler.
+- Delete_player: Deze functie verwijdert een speler uit een spel als deze speler niet binnen 1 dag zijn beurt volbrengt of het spel is gewonnen door een speler. 
 - Player_data: Verzamelt de data van de speler die is ingelogd.
 - Board_data: Verzameld de data van alle spelers die in dezelfde room zitten als de speler die is ingelogd.
+
+Daarnaast hebben we gebruik gemaakt van een mapje doc waar de screenshot van het bordspel in te vinden is. Alle css files zijn in het mapje static te vinden en in het mapje templates zijn alle html-templates te vinden. 
