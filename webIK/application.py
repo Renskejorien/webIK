@@ -70,8 +70,7 @@ def newroom():
         # Show roomnumber
         flash("Your roomcode will be {}".format(roomnumber))
         return render_template("login.html")
-    else:
-        return render_template("newroom.html")
+    return render_template("newroom.html")
 
 @app.route("/existingroom/", methods=["GET", "POST"])
 def existingroom():
@@ -108,8 +107,7 @@ def existingroom():
         rows = db.execute("SELECT * FROM rooms WHERE username = :username AND roomnumber= :roomnumber", username=username, roomnumber=roomnumber)
         session["user_id"] = rows[0]["user_id"]
         return redirect("/board/")
-    else:
-        return render_template("existingroom.html")
+    return render_template("existingroom.html")
 
 @app.route("/login/", methods=["GET", "POST"])
 def login():
@@ -133,8 +131,7 @@ def login():
         date = datetime.timestamp(datetime.now())
         db.execute("UPDATE rooms SET date = :date WHERE user_id = :user_id", user_id=session["user_id"], date=date)
         return redirect("/board/")
-    else:
-        return render_template("login.html")
+    return render_template("login.html")
 
 @app.route("/questions/", methods=["GET", "POST"])
 @login_required
@@ -186,8 +183,7 @@ def question():
 
         # Return template with the list [q, aA, aB, aC, aD] with one of them correct (and saved in session)
         return render_template("questions.html", data=q_a)
-    else:
-        return redirect("/board/")
+    return redirect("/board/")
 
 
 @app.route("/answer_check/", methods=["GET"])
@@ -195,12 +191,11 @@ def question():
 def answer_check():
     """Checks if question is answered correctly"""
 
-    # if you gave the correct answer, update new place and return true
+    # If you gave the correct answer, update new place and return true
     if session["correct_answer"] == request.args.get('your_answer'):
         db.execute("UPDATE rooms SET place = place + :place WHERE user_id = :user_id", user_id=session["user_id"], place=1)
         return jsonify(True)
-    else:
-        return jsonify(False)
+    return jsonify(False)
 
 @app.route("/board/")
 @login_required
@@ -228,8 +223,7 @@ def board():
     if playerdata[0]["won"] == 1:
         if playerdata[0]["place"] >= 18:
             return render_template("winner.html")
-        else:
-            return render_template("loser.html")
+        return render_template("loser.html")
 
     # Checks if it's the players turn
     if int(playerdata[0]["turn"]) == 1:
@@ -261,8 +255,7 @@ def bridge():
     if playerdata[0]["won"] == 1:
         if playerdata[0]["place"] >= 18:
             return render_template("winner.html")
-        else:
-            return render_template("loser.html")
+        return render_template("loser.html")
 
     roomnumber = int(playerdata[0]["roomnumber"])
     boarddatajs = json.dumps(boarddata)
@@ -288,14 +281,12 @@ def roll_dice():
             db.execute("UPDATE rooms SET place = place + :dice, rolled = :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
-            return redirect("/bridge/")
-
         else:
             dice = random.randrange(1,3,1)
             db.execute("UPDATE rooms SET place = place + :dice, rolled = :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
 
-            return redirect("/bridge/")
+    return redirect("/bridge/")
 
 @app.route("/compute_turn/")
 @login_required
