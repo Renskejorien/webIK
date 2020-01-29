@@ -36,7 +36,7 @@
             if(timeleft <= 0)
             {
                 clearInterval(downloadTimer);
-                swal("Time's up!", "Try not to doubt this long next time!");
+                swal("Time's up!", "Try not to doubt this long next time!", "error");
                 window.location.replace('/compute_turn/');
             }
         }, 1000);
@@ -49,17 +49,14 @@
                 if (response == false)
                 {
                     clearInterval(downloadTimer);
-                    swal({
-                        title: "Awww",
-                        text: "Unfortunately, that was not the correct answer!",
-                        icon: "success",
-                        });
+                    swal("Awww", "Unfortunately, that was not the correct answer!", "error");
+
                     window.location.replace('/compute_turn/');
                 }
                 else
                 {
                     clearInterval(downloadTimer);
-                    swal("Well done!", "You gave the correct answer!");
+                    swal("Well done!", "You gave the correct answer!", "success");
                     window.location.replace('/compute_turn/');
                 }
             }
