@@ -17,7 +17,7 @@ Onze webapplicatie PEANUTS zal een combinatie zijn tussen trivia en een bordspel
   - Timer beurt: als er weer een nieuwe speler aan de beurt is heeft deze 24 uur de tijd om zijn volgende vraag te    beantwoorden, anders wordt de speler uit het spel verwijderd.
 - Speciale vakjes op het bord, waarbij je je bijvoorbeeld 5 plaatsen vooruit/terug moet verplaatsen.
 
-# Samenwerking
+## Samenwerking
 Wouter: heeft het grootste deel aan het bord bijgedragen. Hij heeft ervoor gezorgd dat het bord er staat, dat er een dobbelsteen kan worden gegooid en dat de spelers over het bord kunnen bewegen.
 
 Thomas: heeft ervoor gezorgd dat alle vragen op het scherm verschijnen wanneer een speler op een vakje komt. Daarnaast kunnen spelers aangeven welk antwoord ze kiezen en wordt er laten zien of het goede antwoord wordt gegeven.
