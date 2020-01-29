@@ -271,13 +271,12 @@ def roll_dice():
     # The player can only roll dice if it's their turn
     if int(playerdata[0]["turn"]) == 1:
 
-        # With the risky-dice, the player can throw -2, -1, 0 or 1
+        # Checks if player is on a risky box and replaces dice if so
         if playerdata[0]["place"] == 5 or playerdata[0]["place"] == 12:
             choice = [-2, 1]
             dice = random.choice(choice)
             db.execute("UPDATE rooms SET place = place + :dice, rolled = :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
                         roomnumber=roomnumber, user_id=session["user_id"], dice=dice)
-
         else:
             dice = random.randrange(1,3,1)
             db.execute("UPDATE rooms SET place = place + :dice, rolled = :dice WHERE roomnumber = :roomnumber AND user_id = :user_id",
@@ -297,11 +296,11 @@ def compute_turn():
 
     # Can only compute turn if it's the players turn
     if int(playerdata[0]["turn"]) == 1:
+
         # If a player reaches the finish, the game is over
         if int(playerdata[0]["place"]) >= 18:
             db.execute("UPDATE rooms SET won = :won WHERE roomnumber = :roomnumber",
                         roomnumber=roomnumber, won=1)
-
         boarddata = board_data(roomnumber)
 
         # Set the new turn for each player
@@ -322,17 +321,11 @@ def logout():
     session.clear()
     return redirect("/")
 
-# Wat is dit?
-@app.route("/favicon.ico")
-def favicon():
-    return "", 404
-
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
     return print(e.name, e.code)
-
 
 # Listen for errors
 for code in default_exceptions:
